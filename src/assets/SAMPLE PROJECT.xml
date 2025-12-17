@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>Semilla, Rolan Brixx</Author>
+  <LastAuthor>Semilla, Rolan Brixx</LastAuthor>
+  <Created>2025-12-15T02:28:27Z</Created>
+  <LastSaved>2025-12-15T02:36:48Z</LastSaved>
+  <Version>16.00</Version>
+ </DocumentProperties>
+ <CustomDocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Enabled dt:dt="string">true</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Enabled>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_SetDate dt:dt="string">2025-12-15T02:36:37Z</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_SetDate>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Method dt:dt="string">Standard</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Method>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Name dt:dt="string">Anyone (unrestricted)</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Name>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_SiteId dt:dt="string">1d981f77-3ca3-46ae-b0d4-e8044e6c7f84</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_SiteId>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_ActionId dt:dt="string">0e106180-c5f0-4d4e-b02a-280c54da27c9</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_ActionId>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_ContentBits dt:dt="string">0</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_ContentBits>
+  <MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Tag dt:dt="string">10, 3, 0, 1</MSIP_Label_8a813f4b-519a-4481-a498-85770f517757_Tag>
+ </CustomDocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>12105</WindowHeight>
+  <WindowWidth>28800</WindowWidth>
+  <WindowTopX>32767</WindowTopX>
+  <WindowTopY>32767</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s28" ss:Name="Neutral">
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#9C5700"/>
+   <Interior ss:Color="#FFEB9C" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s64" ss:Parent="s28">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
+  </Style>
+  <Style ss:ID="s67">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+  </Style>
+  <Style ss:ID="s69" ss:Parent="s28">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+  </Style>
+  <Style ss:ID="s71">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="7" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="96.75"/>
+   <Column ss:AutoFitWidth="0" ss:Width="99"/>
+   <Column ss:AutoFitWidth="0" ss:Width="83.25"/>
+   <Column ss:AutoFitWidth="0" ss:Width="124.5"/>
+   <Column ss:AutoFitWidth="0" ss:Width="119.25"/>
+   <Row>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Name</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Task Completed</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Login Sessions</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Features Implemented</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Bugs Resolved</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Rolan</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">20</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">17</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">5</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">9</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Steven</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">24</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">38</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">11</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">7</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Vincent</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">21</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">40</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">8</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">11</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Elijah</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">18</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">30</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">10</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">11</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Achilles</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">26</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">27</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">14</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">7</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Mark</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">45</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">13</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="Number">9</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Print>
+    <ValidPrinterInfo/>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <RangeSelection>R1C1:R7C5</RangeSelection>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
