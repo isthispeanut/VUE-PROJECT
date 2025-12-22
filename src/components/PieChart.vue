@@ -51,7 +51,6 @@ function ParseXmlToPieData(XmlString) {
 }
 
 // Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
-// so `onMounted` can just call `mount()` and `onBeforeUnmount` can call `unmount()`.
 // createChartLifecycle: keeps Chart instance and exposes mount/unmount/update
 function createChartLifecycle(canvasRef, buildConfig) {
   let instance = null
