@@ -4,7 +4,6 @@ import Chart from 'chart.js/auto'
 import xmlRaw from '../assets/SAMPLE PROJECT.xml?raw'
 
 const CanvasRef = ref(null)
-let ChartInstance = null
 
 function FindRows(Doc) {
   let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
@@ -51,10 +50,38 @@ function ParseXmlToPieData(XmlString) {
   return { Labels: Headers.slice(1), Data: Sums }
 }
 
-onMounted(() => {
+// Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
+// so `onMounted` can just call `mount()` and `onBeforeUnmount` can call `unmount()`.
+// createChartLifecycle: keeps Chart instance and exposes mount/unmount/update
+function createChartLifecycle(canvasRef, buildConfig) {
+  let instance = null
+
+  function mount() {
+    const cfg = typeof buildConfig === 'function' ? buildConfig() : buildConfig
+    const canvas = canvasRef.value
+    if (!canvas || !cfg) return
+    const ctx = canvas.getContext && canvas.getContext('2d')
+    if (!ctx) return
+    instance = new Chart(ctx, cfg)
+  }
+
+  function unmount() {
+    if (instance) { instance.destroy(); instance = null }
+  }
+
+  function update(newCfg) {
+    if (!instance || !newCfg) return
+    if (newCfg.data) instance.data = newCfg.data
+    if (newCfg.options) instance.options = newCfg.options
+    instance.update()
+  }
+
+  return { mount, unmount, update }
+}
+// buildConfig returns a Chart.js config object based on parsed XML
+function buildConfig() {
   const { Labels, Data } = ParseXmlToPieData(xmlRaw)
-  const Ctx = CanvasRef.value.getContext('2d')
-  ChartInstance = new Chart(Ctx, {
+  return {
     type: 'pie',
     data: {
       labels: Labels,
@@ -66,10 +93,17 @@ onMounted(() => {
       }]
     },
     options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
-  })
+  }
+}
+
+// create lifecycle handlers for this chart instance (reusable pattern)
+const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
+
+onMounted(() => {
+  mount()
 })
 
-onBeforeUnmount(() => { if (ChartInstance) ChartInstance.destroy() })
+onBeforeUnmount(() => { unmount() })
 </script>
 
 <template>

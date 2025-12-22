@@ -4,7 +4,6 @@ import Chart from 'chart.js/auto'
 import xmlRaw from '../assets/SAMPLE PROJECT.xml?raw'
 
 const CanvasRef = ref(null)
-let ChartInstance = null
 
 function FindRows(Doc) {
   let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
@@ -41,6 +40,35 @@ function ParseXmlToTable(XmlString) {
   return { Headers, Rows: DataRows }
 }
 
+// Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
+// so `onMounted` can just call `mount()` and `onBeforeUnmount` can call `unmount()`.
+// createChartLifecycle: local helper to manage Chart.js instance (mount/update/unmount)
+function createChartLifecycle(canvasRef, buildConfig) {
+  let instance = null
+
+  function mount() {
+    const cfg = typeof buildConfig === 'function' ? buildConfig() : buildConfig
+    const canvas = canvasRef.value
+    if (!canvas || !cfg) return
+    const ctx = canvas.getContext && canvas.getContext('2d')
+    if (!ctx) return
+    instance = new Chart(ctx, cfg)
+  }
+
+  function unmount() {
+    if (instance) { instance.destroy(); instance = null }
+  }
+
+  function update(newCfg) {
+    if (!instance || !newCfg) return
+    if (newCfg.data) instance.data = newCfg.data
+    if (newCfg.options) instance.options = newCfg.options
+    instance.update()
+  }
+
+  return { mount, unmount, update }
+}
+
 const MetricIndex = ref(1)        // header index to use as metric
 const Headers = ref([])
 const Rows = ref([])
@@ -56,9 +84,9 @@ function RebuildSeries() {
   })
 }
 
-function CreateChart() {
-  const Ctx = CanvasRef.value.getContext('2d')
-  ChartInstance = new Chart(Ctx, {
+// buildConfig returns a Chart.js config object based on current reactive values
+function buildConfig() {
+  return {
     type: 'bar',
     data: {
       labels: Labels.value,
@@ -74,17 +102,11 @@ function CreateChart() {
       scales: { x: { beginAtZero: true } },
       maintainAspectRatio: false
     }
-  })
+  }
 }
 
-function UpdateChartData() {
-  if (!ChartInstance) return
-  ChartInstance.data.labels = Labels.value
-  ChartInstance.data.datasets[0].label = Headers.value[MetricIndex.value] || 'Value'
-  ChartInstance.data.datasets[0].data = Values.value
-  ChartInstance.data.datasets[0].backgroundColor = Labels.value.map((_, i) => `hsl(${(i*45)%360} 70% 55%)`)
-  ChartInstance.update()
-}
+// create lifecycle handlers for this chart instance
+const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
 
 function FindBestMetricIndex(Hdrs, DataRows) {
   // prefer headers that mention "task" or "completed"
@@ -116,15 +138,15 @@ onMounted(() => {
   }
 
   RebuildSeries()
-  CreateChart()
+  mount()
 })
 
 watch(MetricIndex, () => {
   RebuildSeries()
-  UpdateChartData()
+  update(buildConfig())
 })
 
-onBeforeUnmount(() => { if (ChartInstance) ChartInstance.destroy() })
+onBeforeUnmount(() => { unmount() })
 </script>
 
 <template>
