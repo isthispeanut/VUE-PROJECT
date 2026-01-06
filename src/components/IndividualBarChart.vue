@@ -101,7 +101,10 @@ function buildConfig() {
           }
         }
       }      
-    }
+    },
+      scales: { x: { beginAtZero: true } },
+      maintainAspectRatio: false
+    } 
   }
 }
 
