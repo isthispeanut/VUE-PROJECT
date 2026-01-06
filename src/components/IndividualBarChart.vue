@@ -2,32 +2,12 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import Chart from 'chart.js/auto'
 import mockData from './data/MockData.json'
+import { METRICS, buildSeries } from '../utils/ChartData.js'
 
 const CanvasRef = ref(null)
 
-function ParseJsonToTable(json) {
-  const passengers = (json && json.passengers) || []
-  const Headers = ['Name', 'Age', 'Purchases', 'Visits', 'Miles', 'Avg Spend']
-  const Rows = passengers.map(p => {
-    const name = [p.title, p.firstName, p.lastName].filter(Boolean).join(' ').trim() || (p.passengerId || 'Unknown')
-    let age = 0
-    if (p.dateOfBirth) {
-      const dob = new Date(p.dateOfBirth)
-      if (!Number.isNaN(dob.getTime())) {
-        const now = new Date()
-        age = now.getFullYear() - dob.getFullYear()
-        const m = now.getMonth() - dob.getMonth()
-        if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--
-      }
-    }
-    const purchases = Number.isFinite(Number(p.purchases)) ? String(p.purchases) : '0'
-    const visits = Number.isFinite(Number(p.visits)) ? String(p.visits) : '0'
-    const miles = Number.isFinite(Number(p.miles)) ? String(p.miles) : '0'
-    const avgSpend = Number.isFinite(Number(p.avgSpend)) ? String(p.avgSpend) : '0'
-    return [name, String(age), purchases, visits, miles, avgSpend]
-  })
-  return { Headers, Rows }
-}
+// accept data via prop; default to mockData for backward compatibility
+const props = defineProps({ data: { type: Object, default: () => mockData } })
 
 // Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
 function createChartLifecycle(canvasRef, buildConfig) {
@@ -56,19 +36,22 @@ function createChartLifecycle(canvasRef, buildConfig) {
   return { mount, unmount, update }
 }
 
-const MetricIndex = ref(1)        // header index to use as metric
-const Headers = ref([])
-const Rows = ref([])
+const MetricIndex = ref(0)        // index into METRICS
+const Headers = ref([]) // will hold metric labels for selector
+const Rows = ref([])    // rows are objects (see ChartData.buildSeries)
 const Labels = ref([])
 const Values = ref([])
+const Normalize = ref(false)
+const SortOrder = ref('none') // 'none' | 'asc' | 'desc'
+const Metrics = METRICS
 
 function RebuildSeries() {
-  Labels.value = Rows.value.map(r => (r[0] && r[0].trim()) ? r[0].trim() : 'Unknown')
-  Values.value = Rows.value.map(r => {
-    const Raw = r[MetricIndex.value] || ''
-    const N = parseFloat((Raw || '').replace(/[^0-9.-]+/g, ''))
-    return Number.isFinite(N) ? N : 0
-  })
+  const passengers = (props.data && props.data.passengers) || []
+  const metricKey = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].key) || 'purchases'
+  const series = buildSeries(passengers, metricKey, { normalize: Normalize.value, sort: SortOrder.value })
+  Rows.value = series.rows
+  Labels.value = series.labels
+  Values.value = series.values
 }
 
 // buildConfig returns a Chart.js config object based on current reactive values
@@ -85,63 +68,45 @@ function buildConfig() {
     },
     options: {
       indexAxis: 'y',
-      plugins: { 
-        legend: { display: false }, 
+      plugins: {
+        legend: { display: false },
         tooltip: {
           callbacks: {
-            label(ctx){
+            label(ctx) {
               const di = ctx.dataIndex
-              const header = Headers.value[MetricIndex.value] || 'Value'
-              const raw = (Rows.value[di] && Rows.value[di][MetricIndex.value]) || '0'
-              const parsed = parseFloat(String(raw).replace(/[^0-9.-]+/g, '')) || 0
-              const name = (Rows.value[di] && Rows.value[di][0]) ? Rows.value[di][0] : 'Unknown'
-              return `${header}: ${parsed.toLocaleString()} - ${name}`
+              const metricLabel = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].label) || 'Value'
+              const row = Rows.value[di] || {}
+              const val = Number.isFinite(Number(row.value)) ? Number(row.value) : 0
+              const name = row.name || 'Unknown'
+              // show metric value and passenger name; include purchases/visits for context
+              const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
+              if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
+              if (row.visits !== undefined) parts.push(`Visits: ${row.visits}`)
+              return parts.join(' — ')
+            }
           }
         }
-      }      
-    },
+      },
       scales: { x: { beginAtZero: true } },
       maintainAspectRatio: false
-    } 
+    }
   }
 }
 
 //create Chart.js lifecycle manager
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
 
-function FindBestMetricIndex(Hdrs, DataRows) {
-  // prefer headers that mention "task" or "completed"
-  const Preferred = Hdrs.findIndex(h => /task|completed|completed tasks|tasks/i.test(h))
-  if (Preferred > 0) return Preferred
-  // otherwise pick the first numeric column (skip column 0 which is name)
-  for (let ci = 1; ci < Hdrs.length; ci++) {
-    // check if at least one row has numeric value at this column
-    const AnyNumeric = DataRows.some(r => {
-      const Raw = r[ci] || ''
-      const N = parseFloat(Raw.toString().replace(/[^0-9.-]+/g, ''))
-      return Number.isFinite(N) && !Number.isNaN(N)
-    })
-    if (AnyNumeric) return ci
-  }
-  return Math.min(1, Math.max(0, Hdrs.length - 1))
-}
+// legacy helpers removed; metrics handled by src/utils/ChartData.js
 
 onMounted(() => {
-  const Parsed = ParseJsonToTable(mockData)
-  Headers.value = Parsed.Headers
-  Rows.value = Parsed.Rows
-
-  if (Headers.value.length > 1 && Rows.value.length > 0) {
-    MetricIndex.value = FindBestMetricIndex(Headers.value, Rows.value)
-  } else {
-    MetricIndex.value = Math.min(1, Math.max(0, Headers.value.length - 1))
-  }
-
+  // initialize metric selector labels and series using utils
+  Headers.value = Metrics.map(m => m.label)
+  MetricIndex.value = 0
   RebuildSeries()
   mount()
 })
 
-watch(MetricIndex, () => {
+watch([MetricIndex, Normalize, SortOrder], () => {
   RebuildSeries()
   update(buildConfig())
 })
@@ -154,9 +119,17 @@ onBeforeUnmount(() => { unmount() })
     <div class="panel-header" style="align-items:center; gap:12px;">
       <h3>Passenger Breakdown</h3>
       <small>Select metric to compare</small>
-      <div style="margin-left:auto;">
-        <select id="metric" v-model.number="MetricIndex" style="padding:6px 8px; margin-left:8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
-          <option v-for="(h, idx) in Headers" :key="idx" :value="idx">{{ h || 'Column ' + idx }}</option>
+      <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+        <select id="metric" v-model.number="MetricIndex" style="padding:6px 8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
+          <option v-for="(h, idx) in Headers" :key="idx" :value="idx">{{ h || 'Metric ' + idx }}</option>
+        </select>
+        <label style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#444;">
+          <input type="checkbox" v-model="Normalize" /> Normalize
+        </label>
+        <select v-model="SortOrder" style="padding:6px 8px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
+          <option value="none">No sort</option>
+          <option value="desc">Sort ↓</option>
+          <option value="asc">Sort ↑</option>
         </select>
       </div>
     </div>
