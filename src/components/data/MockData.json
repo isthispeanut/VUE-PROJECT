@@ -1,0 +1,53 @@
+{
+  "passengers": [
+    {
+      "passengerId": "PAX001",
+      "type": "ADULT",
+      "title": "Mr",
+      "firstName": "Juan",
+      "lastName": "Dela Cruz",
+      "gender": "MALE",
+      "dateOfBirth": "1995-03-12",
+      "nationality": "PH",
+      "contactDetails": {
+        "email": "juan.delacruz@example.com",
+        "phone": "+639171234567"
+      },
+      "documents": {
+        "passportNumber": "P12345678",
+        "passportExpiry": "2031-05-20",
+        "issuingCountry": "PH"
+      }
+    },
+    {
+      "passengerId": "PAX002",
+      "type": "ADULT",
+      "title": "Mrs",
+      "firstName": "Ana",
+      "lastName": "Dela Cruz",
+      "gender": "FEMALE",
+      "dateOfBirth": "1997-07-08",
+      "nationality": "PH"
+    },
+    {
+      "passengerId": "PAX003",
+      "type": "CHILD",
+      "title": "Ms",
+      "firstName": "Sofia",
+      "lastName": "Dela Cruz",
+      "gender": "FEMALE",
+      "dateOfBirth": "2014-11-21",
+      "nationality": "PH"
+    },
+    {
+      "passengerId": "PAX004",
+      "type": "INFANT",
+      "title": "Baby",
+      "firstName": "Lucas",
+      "lastName": "Dela Cruz",
+      "gender": "MALE",
+      "dateOfBirth": "2024-02-02",
+      "nationality": "PH"
+    }
+  ]
+}

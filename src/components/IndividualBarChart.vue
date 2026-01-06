@@ -1,48 +1,31 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import Chart from 'chart.js/auto'
-import xmlRaw from '../assets/SAMPLE PROJECT.xml?raw'
+import mockData from './data/MockData.json'
 
 const CanvasRef = ref(null)
 
-function FindRows(Doc) {
-  let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
-  if (Rows.length) return Rows
-  Rows = Array.from(Doc.getElementsByTagName('*')).filter(el => el.localName === 'Row')
-  return Rows
-}
-function FindFirstDataText(Cell) {
-  if (!Cell) return ''
-  const Walker = document.createTreeWalker(Cell, NodeFilter.SHOW_ELEMENT, null, false)
-  while (Walker.nextNode()) {
-    const El = Walker.currentNode
-    if (El.localName === 'Data') return (El.textContent || '').trim()
-  }
-  return ''
-}
-function ParseXmlToTable(XmlString) {
-  const Parser = new DOMParser()
-  const Doc = Parser.parseFromString(XmlString, 'application/xml')
-  if (Doc.querySelector('parsererror')) return { Headers: [], Rows: [] }
-
-  const Rows = FindRows(Doc)
-  if (Rows.length === 0) return { Headers: [], Rows: [] }
-
-  const HeaderCells = Array.from(Rows[0].children).filter(c => c.localName === 'Cell')
-  const Headers = HeaderCells.map(Cell => FindFirstDataText(Cell) || 'Column')
-
-  const DataRows = []
-  for (let r = 1; r < Rows.length; r++) {
-    const Cells = Array.from(Rows[r].children).filter(c => c.localName === 'Cell')
-    const Texts = Cells.map(c => FindFirstDataText(c))
-    DataRows.push(Texts)
-  }
-  return { Headers, Rows: DataRows }
+function ParseJsonToTable(json) {
+  const passengers = (json && json.passengers) || []
+  const Headers = ['Name', 'Age']
+  const Rows = passengers.map(p => {
+    const name = [p.title, p.firstName, p.lastName].filter(Boolean).join(' ').trim() || (p.passengerId || 'Unknown')
+    let age = 0
+    if (p.dateOfBirth) {
+      const dob = new Date(p.dateOfBirth)
+      if (!Number.isNaN(dob.getTime())) {
+        const now = new Date()
+        age = now.getFullYear() - dob.getFullYear()
+        const m = now.getMonth() - dob.getMonth()
+        if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--
+      }
+    }
+    return [name, String(age)]
+  })
+  return { Headers, Rows }
 }
 
 // Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
-// so `onMounted` can just call `mount()` and `onBeforeUnmount` can call `unmount()`.
-// createChartLifecycle: local helper to manage Chart.js instance (mount/update/unmount)
 function createChartLifecycle(canvasRef, buildConfig) {
   let instance = null
 
@@ -105,7 +88,7 @@ function buildConfig() {
   }
 }
 
-// create lifecycle handlers for this chart instance
+//create Chart.js lifecycle manager
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
 
 function FindBestMetricIndex(Hdrs, DataRows) {
@@ -126,11 +109,10 @@ function FindBestMetricIndex(Hdrs, DataRows) {
 }
 
 onMounted(() => {
-  const Parsed = ParseXmlToTable(xmlRaw)
+  const Parsed = ParseJsonToTable(mockData)
   Headers.value = Parsed.Headers
   Rows.value = Parsed.Rows
 
-  // pick a sensible default metric index
   if (Headers.value.length > 1 && Rows.value.length > 0) {
     MetricIndex.value = FindBestMetricIndex(Headers.value, Rows.value)
   } else {
