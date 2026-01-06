@@ -8,7 +8,7 @@ import './Design.css'
   <div class="card" style="max-width:1200px; margin: 28px auto;">
     <header class="header" style="align-items:flex-start; gap:12px;">
       <div>
-        <h1>Activity Tracking</h1>
+        <h1>Passenger Tracking</h1>
         <p class="sub">A SAMPLE CHART DEMO</p>
       </div>
       <button class="theme-toggle" aria-label="toggle theme">☀️</button>

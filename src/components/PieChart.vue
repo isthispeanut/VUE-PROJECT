@@ -93,8 +93,8 @@ onBeforeUnmount(() => { unmount() })
 <template>
   <div class="panel" style="min-height:360px; width:100%;">
     <div class="panel-header">
-      <h3>Daily Progress</h3>
-      <small>Derived SAMPLE PROJECT.xml</small>
+      <h3>Passenger Count</h3>
+      <small>Derived from JSON Payload</small>
     </div>
     <div style="height:360px; margin-top:12px;">
       <canvas ref="CanvasRef"></canvas>

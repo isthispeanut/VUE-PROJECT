@@ -134,7 +134,7 @@ onBeforeUnmount(() => { unmount() })
 <template>
   <div class="panel" style="width:100%; min-height:360px;">
     <div class="panel-header" style="align-items:center; gap:12px;">
-      <h3>Individual Breakdown</h3>
+      <h3>Passenger Breakdown</h3>
       <small>Select metric to compare</small>
       <div style="margin-left:auto;">
         <select id="metric" v-model.number="MetricIndex" style="padding:6px 8px; margin-left:8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
