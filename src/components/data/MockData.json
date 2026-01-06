@@ -135,8 +135,8 @@
       "gender": "MALE",
       "dateOfBirth": "2024-01-19",
       "nationality": "AU",
-      "purchases" : 32,
-      "visits": 56,
+      "purchases" : 12,
+      "visits": 10,
       "miles": 23874,
       "avgSpend": 128.63
     }

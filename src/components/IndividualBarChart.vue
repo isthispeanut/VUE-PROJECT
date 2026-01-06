@@ -7,7 +7,7 @@ const CanvasRef = ref(null)
 
 function ParseJsonToTable(json) {
   const passengers = (json && json.passengers) || []
-  const Headers = ['Name', 'Age']
+  const Headers = ['Name', 'Age', 'Purchases', 'Visits', 'Miles', 'Avg Spend']
   const Rows = passengers.map(p => {
     const name = [p.title, p.firstName, p.lastName].filter(Boolean).join(' ').trim() || (p.passengerId || 'Unknown')
     let age = 0
@@ -21,6 +21,12 @@ function ParseJsonToTable(json) {
       }
     }
     return [name, String(age)]
+    const purchases = Number.isFinite(Number(p.purchases)) ? String(p.purchases) : '0'
+    const purchases = Number.isFinite(Number(p.purchases)) ? String(p.purchases) : '0'
+    const visits = Number.isFinite(Number(p.visits)) ? String(p.visits) : '0'
+    const miles = Number.isFinite(Number(p.miles)) ? String(p.miles) : '0'
+    const avgSpend = Number.isFinite(Number(p.avgSpend)) ? String(p.avgSpend) : '0'
+    return [name, String(age), purchases, visits, miles, avgSpend]
   })
   return { Headers, Rows }
 }
@@ -81,9 +87,20 @@ function buildConfig() {
     },
     options: {
       indexAxis: 'y',
-      plugins: { legend: { display: false } },
-      scales: { x: { beginAtZero: true } },
-      maintainAspectRatio: false
+      plugins: { 
+        legend: { display: false }, 
+        tooltip: {
+          callbacks: {
+            label(ctx){
+              const di = ctx.dataIndex
+              const header = Headers.value[MetricIndex.value] || 'Value'
+              const raw = (Rows.value[di] && Rows.value[di][MetricIndex.value]) || '0'
+              const parsed = parseFloat(String(raw).replace(/[^0-9.-]+/g, '')) || 0
+              const name = (Rows.value[di] && Rows.value[di][0]) ? Rows.value[di][0] : 'Unknown'
+              return `${header}: ${parsed.toLocaleString()} - ${name}`
+          }
+        }
+      }      
     }
   }
 }
