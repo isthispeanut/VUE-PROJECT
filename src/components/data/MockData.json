@@ -23,10 +23,10 @@
       "gender": "FEMALE",
       "dateOfBirth": "1998-06-03",
       "nationality": "SG",
-      "purchases" : 4,
-      "visits": 8,
+      "purchases" : 10,
+      "visits": 18,
       "miles": 21400,
-      "avgSpend": 175.5
+      "avgSpend": 275.5
     },
     {
       "passengerId": "PAX003",
@@ -51,7 +51,7 @@
       "gender": "FEMALE",
       "dateOfBirth": "1991-02-11",
       "nationality": "IN",
-      "purchases" : 10,
+      "purchases" : 20,
       "visits": 18,
       "miles": 48200,
       "avgSpend": 312.25
@@ -68,7 +68,7 @@
       "purchases" : 17,
       "visits": 26,
       "miles": 89200,
-      "avgSpend": 510.1
+      "avgSpend": 510
     },
     {
       "passengerId": "PAX006",
@@ -79,7 +79,7 @@
       "gender": "FEMALE",
       "dateOfBirth": "1994-12-05",
       "nationality": "IT",
-      "purchases" : 7,
+      "purchases" : 17,
       "visits": 12,
       "miles": 27090,
       "avgSpend": 862.5
