@@ -20,8 +20,6 @@ function ParseJsonToTable(json) {
         if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--
       }
     }
-    return [name, String(age)]
-    const purchases = Number.isFinite(Number(p.purchases)) ? String(p.purchases) : '0'
     const purchases = Number.isFinite(Number(p.purchases)) ? String(p.purchases) : '0'
     const visits = Number.isFinite(Number(p.visits)) ? String(p.visits) : '0'
     const miles = Number.isFinite(Number(p.miles)) ? String(p.miles) : '0'
