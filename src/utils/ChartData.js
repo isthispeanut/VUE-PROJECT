@@ -1,4 +1,5 @@
-// Utility helpers to build chart series from passenger data
+// Helpers to turn passenger records into chart-ready series (labels, values, rows)
+// Simple, readable helpers so the Vue components can make charts easily
 export const METRICS = [
 	{ key: 'purchases', label: 'Purchases' },
 	{ key: 'visits', label: 'Visits' },
@@ -33,12 +34,14 @@ function minMaxNormalize(arr) {
 }
 
 // buildSeries(passengers, metricKey, options)
-// returns { labels, values, rows }
+// Returns an object the charts can use: { labels, values, rows }
+// - `normalize`: scale values 0-100
+// - `sort`: 'none' | 'asc' | 'desc'
 export function buildSeries(passengers = [], metricKey = 'purchases', options = {}) {
 	const { normalize = false, sort = 'none' } = options || {}
 	const rows = (passengers || []).map(computeDerived)
 
-	// determine raw numeric value for each row based on metricKey
+	// pick the number for each row based on metricKey
 	const values = rows.map(r => {
 		if (metricKey === 'totalSpend') return r.totalSpend
 		if (metricKey === 'spendPerVisit') return r.spendPerVisit
@@ -48,10 +51,10 @@ export function buildSeries(passengers = [], metricKey = 'purchases', options = 
 	let finalValues = values.slice()
 	if (normalize) finalValues = minMaxNormalize(finalValues)
 
-	// build combined rows with computed value
+	// attach the final value to each row object
 	const combined = rows.map((r, i) => ({ ...r, value: finalValues[i] }))
 
-	// sorting
+	// apply sorting if requested
 	if (sort === 'desc') combined.sort((a, b) => b.value - a.value)
 	else if (sort === 'asc') combined.sort((a, b) => a.value - b.value)
 

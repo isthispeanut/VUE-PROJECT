@@ -6,10 +6,10 @@ import { METRICS, buildSeries } from '../utils/ChartData.js'
 
 const CanvasRef = ref(null)
 
-// accept data via prop; default to mockData for backward compatibility
+// props: `data` comes from parent; if nothing's passed we use `mockData`
 const props = defineProps({ data: { type: Object, default: () => mockData } })
 
-// Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
+// Helper to manage a Chart.js instance: create it, update it, and destroy it
 function createChartLifecycle(canvasRef, buildConfig) {
   let instance = null
 
@@ -36,13 +36,13 @@ function createChartLifecycle(canvasRef, buildConfig) {
   return { mount, unmount, update }
 }
 
-const MetricIndex = ref(0)        // index into METRICS
-const Headers = ref([]) // will hold metric labels for selector
-const Rows = ref([])    // rows are objects (see ChartData.buildSeries)
+const MetricIndex = ref(0)        // which metric to show (index into `METRICS`)
+const Headers = ref([]) // labels for the metric selector dropdown
+const Rows = ref([])    // series rows (objects) returned by `buildSeries`
 const Labels = ref([])
 const Values = ref([])
 const Normalize = ref(false)
-const SortOrder = ref('none') // 'none' | 'asc' | 'desc'
+const SortOrder = ref('none') // 'none' | 'asc' | 'desc' — controls sorting of bars
 const Metrics = METRICS
 
 function RebuildSeries() {
@@ -54,7 +54,7 @@ function RebuildSeries() {
   Values.value = series.values
 }
 
-// buildConfig returns a Chart.js config object based on current reactive values
+// Build the Chart.js config using the current reactive state (labels, values, options)
 function buildConfig() {
   return {
     type: 'bar',
@@ -78,7 +78,7 @@ function buildConfig() {
               const row = Rows.value[di] || {}
               const val = Number.isFinite(Number(row.value)) ? Number(row.value) : 0
               const name = row.name || 'Unknown'
-              // show metric value and passenger name; include purchases/visits for context
+              // show metric value and passenger name; add purchases/visits if available
               const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
               if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
               if (row.visits !== undefined) parts.push(`Visits: ${row.visits}`)
@@ -93,13 +93,13 @@ function buildConfig() {
   }
 }
 
-//create Chart.js lifecycle manager
+// Create the Chart.js lifecycle manager from the helper above
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
 
-// legacy helpers removed; metrics handled by src/utils/ChartData.js
+// Note: old helper functions were removed — metrics are built in `src/utils/ChartData.js`
 
 onMounted(() => {
-  // initialize metric selector labels and series using utils
+  // Set up selector labels and initial series data, then mount the chart
   Headers.value = Metrics.map(m => m.label)
   MetricIndex.value = 0
   RebuildSeries()

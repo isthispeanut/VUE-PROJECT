@@ -1,4 +1,5 @@
 <script setup>
+// Simple page layout: shows the PieChart and IndividualBarChart components
 import PieChart from './PieChart.vue'
 import IndividualBarChart from './IndividualBarChart.vue'
 import './Design.css'

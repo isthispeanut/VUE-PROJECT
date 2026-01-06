@@ -5,25 +5,11 @@ import mockData from './data/MockData.json'
 
 const CanvasRef = ref(null)
 
-//-- FOR XML PARSING (not used currently) --//
-// function FindRows(Doc) {
-//   let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
-//   if (Rows.length) return Rows
+// Small XML helpers (not used right now) — kept for reference
+// function FindRows(Doc) { ... }
+// function FindFirstDataText(Cell) { ... }
 
-//   Rows = Array.from(Doc.getElementsByTagName('*')).filter(el => el.localName === 'Row')
-//   return Rows
-// }
-
-// function FindFirstDataText(Cell) {
-//   if (!Cell) return ''
-//   const Walker = document.createTreeWalker(Cell, NodeFilter.SHOW_ELEMENT, null, false)
-//   while (Walker.nextNode()) {
-//     const El = Walker.currentNode
-//     if (El.localName === 'Data') return (El.textContent || '').trim()
-//   }
-//   return ''
-// }
-
+// Turn the JSON payload into pie labels and counts
 function ParseJsonToPieData(json) {
   const passengers = (json && json.passengers) || []
   const counts = {}
@@ -36,8 +22,7 @@ function ParseJsonToPieData(json) {
   return { Labels, Data }
 }
 
-// Reusable lifecycle helper: encapsulates Chart.js create/update/destroy
-// createChartLifecycle: keeps Chart instance and exposes mount/unmount/update
+// Helper to manage a Chart.js instance: mount, update, destroy
 function createChartLifecycle(canvasRef, buildConfig) {
   let instance = null
 
@@ -63,7 +48,7 @@ function createChartLifecycle(canvasRef, buildConfig) {
 
   return { mount, unmount, update }
 }
-// buildConfig returns a Chart.js config object based on parsed XML
+// Build the Chart.js config from parsed JSON data
 function buildConfig() {
   const { Labels, Data } = ParseJsonToPieData(mockData)
   return {
