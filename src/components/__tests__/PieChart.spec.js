@@ -15,7 +15,7 @@ import PieChart from '../PieChart.vue'
 describe('PieChart.vue', () => {
   it('renders header and canvas', () => {
     const wrapper = shallowMount(PieChart)
-    expect(wrapper.find('h3').text()).toBe('Daily Progress')
+    expect(wrapper.find('h3').text()).toBe('Passenger Count')
     expect(wrapper.find('canvas').exists()).toBe(true)
   })
 })

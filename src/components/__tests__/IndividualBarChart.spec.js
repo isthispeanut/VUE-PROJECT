@@ -15,7 +15,7 @@ import IndividualBarChart from '../IndividualBarChart.vue'
 describe('IndividualBarChart.vue', () => {
   it('renders header, select and canvas', () => {
     const wrapper = shallowMount(IndividualBarChart)
-    expect(wrapper.find('h3').text()).toBe('Individual Breakdown')
+    expect(wrapper.find('h3').text()).toBe('Passenger Breakdown')
     expect(wrapper.find('select#metric').exists()).toBe(true)
     expect(wrapper.find('canvas').exists()).toBe(true)
   })

@@ -5,7 +5,7 @@ import HelloWorld from '../HelloWorld.vue'
 describe('HelloWorld.vue', () => {
   it('renders title, subtext and theme button', () => {
     const wrapper = shallowMount(HelloWorld)
-    expect(wrapper.find('h1').text()).toContain('Activity Tracking')
+    expect(wrapper.find('h1').text()).toContain('Passenger Tracking')
     expect(wrapper.find('.sub').text()).toContain('A SAMPLE CHART DEMO')
     expect(wrapper.find('button[aria-label="toggle theme"]').exists()).toBe(true)
   })
