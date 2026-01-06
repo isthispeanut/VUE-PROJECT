@@ -5,23 +5,24 @@ import mockData from './data/MockData.json'
 
 const CanvasRef = ref(null)
 
-function FindRows(Doc) {
-  let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
-  if (Rows.length) return Rows
+//-- FOR XML PARSING (not used currently) --//
+// function FindRows(Doc) {
+//   let Rows = Array.from(Doc.getElementsByTagNameNS('*', 'Row') || [])
+//   if (Rows.length) return Rows
 
-  Rows = Array.from(Doc.getElementsByTagName('*')).filter(el => el.localName === 'Row')
-  return Rows
-}
+//   Rows = Array.from(Doc.getElementsByTagName('*')).filter(el => el.localName === 'Row')
+//   return Rows
+// }
 
-function FindFirstDataText(Cell) {
-  if (!Cell) return ''
-  const Walker = document.createTreeWalker(Cell, NodeFilter.SHOW_ELEMENT, null, false)
-  while (Walker.nextNode()) {
-    const El = Walker.currentNode
-    if (El.localName === 'Data') return (El.textContent || '').trim()
-  }
-  return ''
-}
+// function FindFirstDataText(Cell) {
+//   if (!Cell) return ''
+//   const Walker = document.createTreeWalker(Cell, NodeFilter.SHOW_ELEMENT, null, false)
+//   while (Walker.nextNode()) {
+//     const El = Walker.currentNode
+//     if (El.localName === 'Data') return (El.textContent || '').trim()
+//   }
+//   return ''
+// }
 
 function ParseJsonToPieData(json) {
   const passengers = (json && json.passengers) || []
