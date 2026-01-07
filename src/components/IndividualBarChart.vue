@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import Chart from 'chart.js/auto'
 import mockData from './data/MockData.json'
 import { METRICS, buildSeries } from '../utils/ChartData.js'
+import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
@@ -10,31 +10,7 @@ const CanvasRef = ref(null)
 const props = defineProps({ data: { type: Object, default: () => mockData } })
 
 // Helper to manage a Chart.js instance: create it, update it, and destroy it
-function createChartLifecycle(canvasRef, buildConfig) {
-  let instance = null
-
-  function mount() {
-    const cfg = typeof buildConfig === 'function' ? buildConfig() : buildConfig
-    const canvas = canvasRef.value
-    if (!canvas || !cfg) return
-    const ctx = canvas.getContext && canvas.getContext('2d')
-    if (!ctx) return
-    instance = new Chart(ctx, cfg)
-  }
-
-  function unmount() {
-    if (instance) { instance.destroy(); instance = null }
-  }
-
-  function update(newCfg) {
-    if (!instance || !newCfg) return
-    if (newCfg.data) instance.data = newCfg.data
-    if (newCfg.options) instance.options = newCfg.options
-    instance.update()
-  }
-
-  return { mount, unmount, update }
-}
+// lifecycle and config helpers are in src/utils/ChartUtils.js
 
 const MetricIndex = ref(0)        // which metric to show (index into `METRICS`)
 const Headers = ref([]) // labels for the metric selector dropdown
@@ -54,47 +30,10 @@ function RebuildSeries() {
   Values.value = series.values
 }
 
-// Build the Chart.js config using the current reactive state (labels, values, options)
-function buildConfig() {
-  return {
-    type: 'bar',
-    data: {
-      labels: Labels.value,
-      datasets: [{
-        label: Headers.value[MetricIndex.value] || 'Value',
-        data: Values.value,
-        backgroundColor: Labels.value.map((_, i) => `hsl(${(i*45)%360} 70% 55%)`)
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label(ctx) {
-              const di = ctx.dataIndex
-              const metricLabel = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].label) || 'Value'
-              const row = Rows.value[di] || {}
-              const val = Number.isFinite(Number(row.value)) ? Number(row.value) : 0
-              const name = row.name || 'Unknown'
-              // show metric value and passenger name; add purchases/visits if available
-              const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
-              if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
-              if (row.visits !== undefined) parts.push(`Visits: ${row.visits}`)
-              return parts.join(' — ')
-            }
-          }
-        }
-      },
-      scales: { x: { beginAtZero: true } },
-      maintainAspectRatio: false
-    }
-  }
-}
+// buildBarConfig moved to src/utils/ChartUtils.js
 
-// Create the Chart.js lifecycle manager from the helper above
-const { mount, unmount, update } = createChartLifecycle(CanvasRef, buildConfig)
+// Create the Chart.js lifecycle manager from shared helper
+const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
 
 // Note: old helper functions were removed — metrics are built in `src/utils/ChartData.js`
 
@@ -108,7 +47,7 @@ onMounted(() => {
 
 watch([MetricIndex, Normalize, SortOrder], () => {
   RebuildSeries()
-  update(buildConfig())
+  update(buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
 })
 
 onBeforeUnmount(() => { unmount() })
