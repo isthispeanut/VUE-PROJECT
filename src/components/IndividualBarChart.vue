@@ -6,19 +6,19 @@ import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
-// props: `data` comes from parent; if nothing's passed we use `mockData`
+// props: `data` comes from parent; if nothing's passed we use `mockData
 const props = defineProps({ data: { type: Object, default: () => mockData } })
 
 // Helper to manage a Chart.js instance: create it, update it, and destroy it
 // lifecycle and config helpers are in src/utils/ChartUtils.js
 
 const MetricIndex = ref(0)        // which metric to show (index into `METRICS`)
-const Headers = ref([]) // labels for the metric selector dropdown
-const Rows = ref([])    // series rows (objects) returned by `buildSeries`
+const Headers = ref([])           // labels for the metric selector dropdown
+const Rows = ref([])              // series rows (objects) returned by `buildSeries`
 const Labels = ref([])
 const Values = ref([])
 const Normalize = ref(false)
-const SortOrder = ref('none') // 'none' | 'asc' | 'desc' — controls sorting of bars
+const SortOrder = ref('none')     // 'none' | 'asc' | 'desc' — controls sorting of bars
 const Metrics = METRICS
 
 function RebuildSeries() {
@@ -35,7 +35,7 @@ function RebuildSeries() {
 // Create the Chart.js lifecycle manager from shared helper
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
 
-// Note: old helper functions were removed — metrics are built in `src/utils/ChartData.js`
+// Note: old helper functions were removed and metrics are built in `src/utils/ChartData.js`
 
 onMounted(() => {
   // Set up selector labels and initial series data, then mount the chart
