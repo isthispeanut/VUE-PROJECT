@@ -1,12 +1,12 @@
 // Helpers to turn passenger records into chart-ready series (labels, values, rows)
 // Simple, readable helpers so the Vue components can make charts easily
 export const METRICS = [
-	{ key: 'purchases', label: 'Purchases' },
-	{ key: 'visits', label: 'Visits' },
-	{ key: 'miles', label: 'Miles' },
-	{ key: 'avgSpend', label: 'AvgSpend' },
-	{ key: 'totalSpend', label: 'TotalSpend' },
-	{ key: 'spendPerVisit', label: 'SpendPerVisit' }
+	{ key: 'purchases', label: 'Purchases', accessor: r => r.purchases },
+	{ key: 'visits', label: 'Visits', accessor: r => r.visits },
+	{ key: 'miles', label: 'Miles', accessor: r => r.miles },
+	{ key: 'avgSpend', label: 'AvgSpend', accessor: r => r.avgSpend },
+	{ key: 'totalSpend', label: 'TotalSpend', accessor: r => r.totalSpend },
+	{ key: 'spendPerVisit', label: 'SpendPerVisit', accessor: r => r.spendPerVisit }
 ]
 
 function safeNumber(v) {
@@ -42,11 +42,17 @@ export function buildSeries(passengers = [], metricKey = 'purchases', options = 
 	const rows = (passengers || []).map(computeDerived)
 
 	// pick the number for each row based on metricKey
-	const values = rows.map(r => {
-		if (metricKey === 'totalSpend') return r.totalSpend
-		if (metricKey === 'spendPerVisit') return r.spendPerVisit
-		return safeNumber(r[metricKey])
-	})
+	const metric = METRICS.find(m => m.key === metricKey)
+	let values
+	if (metric && typeof metric.accessor === 'function') {
+		values = rows.map(r => safeNumber(metric.accessor(r)))
+	} else {
+		values = rows.map(r => {
+			if (metricKey === 'totalSpend') return r.totalSpend
+			if (metricKey === 'spendPerVisit') return r.spendPerVisit
+			return safeNumber(r[metricKey])
+		})
+	}
 
 	let finalValues = values.slice()
 	if (normalize) finalValues = minMaxNormalize(finalValues)

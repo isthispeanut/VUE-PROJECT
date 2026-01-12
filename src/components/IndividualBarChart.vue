@@ -6,8 +6,8 @@ import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
-// props: `data` comes from parent; if nothing's passed we use `mockData
-const props = defineProps({ data: { type: Object, default: () => mockData } })
+// props: `data` and optional `metrics` can come from parent; defaults provided
+const props = defineProps({ data: { type: Object, default: () => mockData }, metrics: { type: Array, default: () => METRICS } })
 
 // Helper to manage a Chart.js instance: create it, update it, and destroy it
 // lifecycle and config helpers are in src/utils/ChartUtils.js
@@ -19,7 +19,7 @@ const Labels = ref([])
 const Values = ref([])
 const Normalize = ref(false)
 const SortOrder = ref('none')     // 'none' | 'asc' | 'desc' — controls sorting of bars
-const Metrics = METRICS
+const Metrics = props.metrics
 
 function RebuildSeries() {
   const passengers = (props.data && props.data.passengers) || []
@@ -29,8 +29,6 @@ function RebuildSeries() {
   Labels.value = series.labels
   Values.value = series.values
 }
-
-// buildBarConfig moved to src/utils/ChartUtils.js
 
 // Create a computed, derived Chart.js config so the chart becomes reactive
 const chartConfig = computed(() => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
