@@ -27,15 +27,9 @@ const loading = ref(false)
 const error = ref(null)
 
 async function fetchPassengers() {
-  // try real endpoint first, fallback to local mockData
-  try {
-    const res = await fetch('/api/passengers')
-    if (!res.ok) throw new Error('Network response was not ok')
-    return await res.json()
-  } catch (e) {
-    // fallback to bundled mockData
-    return mockData
-  }
+  const res = await fetch('/api/passengers')
+  if (!res.ok) throw new Error(`Fetch failed (${res.status})`)
+  return await res.json()
 }
 
 // the data source used by the component: parent prop > local fetch > bundled mock
@@ -70,7 +64,7 @@ onMounted(() => {
         localData.value = await fetchPassengers()
       } catch (err) {
         error.value = err
-        localData.value = null
+        localData.value = mockData // explicit fallback
       } finally {
         loading.value = false
       }
