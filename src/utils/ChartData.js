@@ -1,12 +1,12 @@
 // Helpers to turn passenger records into chart-ready series (labels, values, rows)
 // Simple, readable helpers so the Vue components can make charts easily
 export const METRICS = [
-	{ key: 'purchases', label: 'Purchases', accessor: r => r.purchases },
-	{ key: 'visits', label: 'Visits', accessor: r => r.visits },
-	{ key: 'miles', label: 'Miles', accessor: r => r.miles },
-	{ key: 'avgSpend', label: 'AvgSpend', accessor: r => r.avgSpend },
-	{ key: 'totalSpend', label: 'TotalSpend', accessor: r => r.totalSpend },
-	{ key: 'spendPerVisit', label: 'SpendPerVisit', accessor: r => r.spendPerVisit }
+  { key: 'purchases', label: 'Purchases', accessor: r => r.purchases },
+  { key: 'visits', label: 'Visits', accessor: r => r.visits },
+  { key: 'miles', label: 'Miles', accessor: r => r.miles },
+  { key: 'avgSpend', label: 'AvgSpend', accessor: r => r.avgSpend },
+  { key: 'totalSpend', label: 'TotalSpend', accessor: r => r.totalSpend },
+  { key: 'spendPerVisit', label: 'SpendPerVisit', accessor: r => r.spendPerVisit }
 ]
 
 function safeNumber(v) {
