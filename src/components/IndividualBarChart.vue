@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import mockData from './data/MockData.json'
 import { METRICS, buildSeries } from '../utils/ChartData.js'
 import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
@@ -32,8 +32,11 @@ function RebuildSeries() {
 
 // buildBarConfig moved to src/utils/ChartUtils.js
 
-// Create the Chart.js lifecycle manager from shared helper
-const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
+// Create a computed, derived Chart.js config so the chart becomes reactive
+const chartConfig = computed(() => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
+
+// Create the Chart.js lifecycle manager from shared helper (factory returns current computed config)
+const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => chartConfig.value)
 
 // Note: old helper functions were removed and metrics are built in `src/utils/ChartData.js`
 
@@ -47,7 +50,11 @@ onMounted(() => {
 
 watch([MetricIndex, Normalize, SortOrder], () => {
   RebuildSeries()
-  update(buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
+})
+
+// When the derived chart config changes, update the existing Chart.js instance
+watch(chartConfig, (cfg) => {
+  if (cfg) update(cfg)
 })
 
 onBeforeUnmount(() => { unmount() })
