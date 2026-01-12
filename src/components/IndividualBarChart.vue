@@ -6,8 +6,8 @@ import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
-// props: `data` and optional `metrics` can come from parent; defaults provided
-const props = defineProps({ data: { type: Object, default: () => mockData }, metrics: { type: Array, default: () => METRICS } })
+// props: `data` and optional `metrics` can come from parent; default data is null so component can fetch
+const props = defineProps({ data: { type: Object, default: null }, metrics: { type: Array, default: () => METRICS } })
 
 // Helper to manage a Chart.js instance: create it, update it, and destroy it
 // lifecycle and config helpers are in src/utils/ChartUtils.js
@@ -16,13 +16,33 @@ const MetricIndex = ref(0)        // which metric to show (index into `METRICS`)
 const Headers = ref([])           // labels for the metric selector dropdown
 const Rows = ref([])              // series rows (objects) returned by `buildSeries`
 const Labels = ref([])
-const Values = ref([])
+const Values = ref([])              
 const Normalize = ref(false)
 const SortOrder = ref('none')     // 'none' | 'asc' | 'desc' — controls sorting of bars
 const Metrics = props.metrics
 
+// local async data handling (Phase 3)
+const localData = ref(null)
+const loading = ref(false)
+const error = ref(null)
+
+async function fetchPassengers() {
+  // try real endpoint first, fallback to local mockData
+  try {
+    const res = await fetch('/api/passengers')
+    if (!res.ok) throw new Error('Network response was not ok')
+    return await res.json()
+  } catch (e) {
+    // fallback to bundled mockData
+    return mockData
+  }
+}
+
+// the data source used by the component: parent prop > local fetch > bundled mock
+const sourceData = computed(() => props.data || localData.value || mockData)
+
 function RebuildSeries() {
-  const passengers = (props.data && props.data.passengers) || []
+  const passengers = (sourceData.value && sourceData.value.passengers) || []
   const metricKey = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].key) || 'purchases'
   const series = buildSeries(passengers, metricKey, { normalize: Normalize.value, sort: SortOrder.value })
   Rows.value = series.rows
@@ -41,12 +61,31 @@ const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => chartCo
 onMounted(() => {
   // Set up selector labels and initial series data, then mount the chart
   Headers.value = Metrics.map(m => m.label)
-  MetricIndex.value = 0
-  RebuildSeries()
-  mount()
+  MetricIndex.value = 0;
+  (async () => {
+    if (!props.data) {
+      loading.value = true
+      error.value = null
+      try {
+        localData.value = await fetchPassengers()
+      } catch (err) {
+        error.value = err
+        localData.value = null
+      } finally {
+        loading.value = false
+      }
+    }
+    RebuildSeries()
+    mount()
+  })()
 })
 
 watch([MetricIndex, Normalize, SortOrder], () => {
+  RebuildSeries()
+})
+
+// rebuild when data source arrives/changes
+watch(sourceData, () => {
   RebuildSeries()
 })
 
