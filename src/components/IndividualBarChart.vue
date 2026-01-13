@@ -44,8 +44,41 @@ function RebuildSeries() {
   Values.value = series.values
 }
 
+// Build Chart.js `data` and `options` locally (domain logic stays in this component)
+const chartData = computed(() => {
+  const label = (Headers && Headers.value && Headers.value[MetricIndex.value]) || 'Value'
+  const bg = Labels.value.map((_, i) => `hsl(${(i * 45) % 360} 70% 55%)`)
+  return {
+    labels: Labels.value,
+    datasets: [{ label, data: Values.value, backgroundColor: bg }]
+  }
+})
+
+const chartOptions = computed(() => ({
+  indexAxis: 'y',
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      callbacks: {
+        label(ctx) {
+          const di = ctx.dataIndex
+          const metricLabel = (Metrics && Metrics[MetricIndex.value] && Metrics[MetricIndex.value].label) || 'Value'
+          const row = (Rows && Rows.value && Rows.value[di]) || {}
+          const val = Number.isFinite(Number(row.value)) ? Number(row.value) : 0
+          const name = row.name || 'Unknown'
+          const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
+          if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
+          if (row.visits !== undefined) parts.push(`Visits: ${row.visits}`)
+          return parts.join(' — ')
+        }
+      }
+    }
+  },
+  scales: { x: { beginAtZero: true } }
+}))
+
 // Create a computed, derived Chart.js config so the chart becomes reactive
-const chartConfig = computed(() => createChartConfig({ type: 'bar', payload: { labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics } }))
+const chartConfig = computed(() => createChartConfig({ type: 'bar', data: chartData.value, options: chartOptions.value }))
 
 // Create the Chart.js lifecycle manager from shared helper (factory returns current computed config)
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => chartConfig.value)

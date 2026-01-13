@@ -105,17 +105,19 @@ export function buildPieConfig(json, colors) {
 }
 
 // Unified factory: returns a Chart.js config for a given chart `type` and `payload`.
-export function createChartConfig({ type = 'bar', payload = {} } = {}) {
-  if (type === 'bar') {
-    // payload should match buildBarConfig signature
-    return buildBarConfig(payload)
+// Generic factory that accepts raw Chart.js `data` and `options` so utils are
+// agnostic of domain specifics (passengers/metrics). Components or
+// `ChartData.js` should prepare `data` and `options` and pass them here.
+export function createChartConfig({ type = 'bar', data = {}, options = {} } = {}) {
+  return {
+    type,
+    data,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      ...options
+    }
   }
-  if (type === 'pie') {
-    // payload: { json, colors }
-    return buildPieConfig(payload.json, payload.colors)
-  }
-  // fallback: try to return a bar config for unknown types to avoid runtime crashes
-  return buildBarConfig(payload)
 }
 
 export default { createChartLifecycle, buildBarConfig, parseJsonToPieData, buildPieConfig, createChartConfig }
