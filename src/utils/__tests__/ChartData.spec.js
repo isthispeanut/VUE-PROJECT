@@ -33,4 +33,29 @@ describe('ChartData utilities', () => {
     expect(parsed.labels.sort()).toEqual(['A', 'B'].sort())
     expect(parsed.values.reduce((a,b) => a+b, 0)).toBe(3)
   })
+
+  it('buildSeries handles empty input and non-numeric values', () => {
+    expect(buildSeries([], 'purchases').labels).toEqual([])
+    const passengers = [ { firstName: 'X', purchases: 'not-a-number' } ]
+    const out = buildSeries(passengers, 'purchases')
+    expect(out.values[0]).toBe(0)
+  })
+
+  it('buildSeries handles totalSpend and spendPerVisit metrics and equal-values normalize', () => {
+    const passengers = [
+      { firstName: 'A', purchases: 2, avgSpend: 5, visits: 1 },
+      { firstName: 'B', purchases: 2, avgSpend: 5, visits: 1 }
+    ]
+    // totalSpend should compute purchases * avgSpend
+    const ts = buildSeries(passengers, 'totalSpend')
+    expect(ts.values.every(v => v === 10)).toBe(true)
+
+    // spendPerVisit should compute correctly
+    const spv = buildSeries(passengers, 'spendPerVisit')
+    expect(spv.values.every(v => v === 10)).toBe(true)
+
+    // normalize when all values equal should return zeros
+    const norm = buildSeries(passengers, 'totalSpend', { normalize: true })
+    expect(norm.values.every(v => v === 0)).toBe(true)
+  })
 })
