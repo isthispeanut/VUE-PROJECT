@@ -24,7 +24,7 @@ export function createChartLifecycle(canvasRef, buildConfig) {
     if (!instance || !newCfg) return
     if (newCfg.data) instance.data = newCfg.data
     if (newCfg.options) instance.options = newCfg.options
-    instance.update()
+    if (instance && typeof instance.update === 'function') instance.update()
   }
 
   return { mount, unmount, update }
