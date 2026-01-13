@@ -105,9 +105,6 @@ export function buildPieConfig(json, colors) {
 }
 
 // Unified factory: returns a Chart.js config for a given chart `type` and `payload`.
-// Usage:
-//  createChartConfig({ type: 'bar', payload: { labels, values, rows, metricIndex, headers, metrics } })
-//  createChartConfig({ type: 'pie', payload: { json, colors } })
 export function createChartConfig({ type = 'bar', payload = {} } = {}) {
   if (type === 'bar') {
     // payload should match buildBarConfig signature
