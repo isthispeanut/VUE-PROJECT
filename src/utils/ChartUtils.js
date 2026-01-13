@@ -30,92 +30,36 @@ export function createChartLifecycle(canvasRef, buildConfig) {
   return { mount, unmount, update }
 }
 
-// Build config for the horizontal bar chart. Accepts simple plain objects and
-// returns a Chart.js config object. Components should pass their reactive
-// values (e.g. `Labels.value`, `Values.value`, etc.) into this function.
-export function buildBarConfig({ labels = [], values = [], rows = [], metricIndex = 0, headers = [], metrics = [] } = {}) {
-  return {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: (headers && headers[metricIndex]) || 'Value',
-        data: values,
-        backgroundColor: labels.map((_, i) => `hsl(${(i*45)%360} 70% 55%)`)
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label(ctx) {
-              const di = ctx.dataIndex
-              const metricLabel = (metrics && metrics[metricIndex] && metrics[metricIndex].label) || 'Value'
-              const row = (rows && rows[di]) || {}
-              const val = Number.isFinite(Number(row.value)) ? Number(row.value) : 0
-              const name = row.name || 'Unknown'
-              const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
-              if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
-              if (row.visits !== undefined) parts.push(`Visits: ${row.visits}`)
-              return parts.join(' — ')
-            }
-          }
-        }
-      },
-      scales: { x: { beginAtZero: true } },
-      maintainAspectRatio: false
-    }
+// Build a generic bar chart config from Chart.js `data` and `options`.
+// `data` must be a Chart.js data object: { labels: [], datasets: [...] }.
+// `options` can override or extend default options.
+export function buildBarConfig({ data = { labels: [], datasets: [] }, options = {} } = {}) {
+  const defaultOptions = {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true } },
+    maintainAspectRatio: false
   }
+  // shallow merge of options (components may provide nested plugin callbacks)
+  const mergedOptions = { ...defaultOptions, ...(options || {}) }
+  return { type: 'bar', data, options: mergedOptions }
 }
 
 // Simple parser used by the pie chart: convert passengers JSON into labels
 // and counts.
-export function parseJsonToPieData(json) {
-  const passengers = (json && json.passengers) || []
-  const counts = {}
-  for (const p of passengers) {
-    const t = (p && p.type) ? String(p.type) : 'UNKNOWN'
-    counts[t] = (counts[t] || 0) + 1
-  }
-  const Labels = Object.keys(counts)
-  const Data = Labels.map(l => counts[l])
-  return { Labels, Data }
-}
-
-// Build config for a pie chart from a JSON payload. Components can pass the
-// JSON they have (mock data or props) and receive a Chart.js config.
-export function buildPieConfig(json, colors) {
-  const { Labels, Data } = parseJsonToPieData(json)
-  const defaultColors = ['#667eea', '#764ba2', '#f6ad55', '#48bb78', '#4299e1', '#f56565', '#9F7AEA']
-  return {
-    type: 'pie',
-    data: {
-      labels: Labels,
-      datasets: [{
-        data: Data,
-        backgroundColor: colors || defaultColors,
-        borderColor: '#fff',
-        borderWidth: 1
-      }]
-    },
-    options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
-  }
+// Build a generic pie chart config from Chart.js `data` and optional `options`.
+export function buildPieConfig({ data = { labels: [], datasets: [] }, options = {} } = {}) {
+  const defaultOptions = { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  const mergedOptions = { ...defaultOptions, ...(options || {}) }
+  return { type: 'pie', data, options: mergedOptions }
 }
 
 // Unified factory: returns a Chart.js config for a given chart `type` and `payload`.
-export function createChartConfig({ type = 'bar', payload = {} } = {}) {
-  if (type === 'bar') {
-    // payload should match buildBarConfig signature
-    return buildBarConfig(payload)
-  }
-  if (type === 'pie') {
-    // payload: { json, colors }
-    return buildPieConfig(payload.json, payload.colors)
-  }
-  // fallback: try to return a bar config for unknown types to avoid runtime crashes
-  return buildBarConfig(payload)
+export function createChartConfig({ type = 'bar', data = undefined, options = undefined } = {}) {
+  if (type === 'bar') return buildBarConfig({ data, options })
+  if (type === 'pie') return buildPieConfig({ data, options })
+  // fallback: assume bar
+  return buildBarConfig({ data, options })
 }
 
-export default { createChartLifecycle, buildBarConfig, parseJsonToPieData, buildPieConfig, createChartConfig }
+export default { createChartLifecycle, buildBarConfig, buildPieConfig, createChartConfig }
