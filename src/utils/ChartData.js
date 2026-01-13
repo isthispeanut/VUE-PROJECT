@@ -71,7 +71,6 @@ export function buildSeries(passengers = [], metricKey = 'purchases', options = 
 
 export default { METRICS, buildSeries }
 
-// Move pie JSON parsing into domain utils so ChartUtils stays generic
 export function parseJsonToPieData(json) {
 	const passengers = (json && json.passengers) || []
 	const counts = {}

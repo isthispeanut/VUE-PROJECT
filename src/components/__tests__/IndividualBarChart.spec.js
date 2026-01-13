@@ -11,6 +11,10 @@ vi.mock('chart.js/auto', () => ({
 }))
 
 import IndividualBarChart from '../IndividualBarChart.vue'
+import mockData from '../data/MockData.json'
+
+// ensure fetch is available and returns mock data during mount
+vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockData) })))
 
 describe('IndividualBarChart.vue', () => {
   it('renders header, select and canvas', () => {

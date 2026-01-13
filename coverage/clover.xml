@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1768286888127" clover="3.2.0">
-  <project timestamp="1768286888128" name="All files">
-    <metrics statements="141" coveredstatements="94" conditionals="131" coveredconditionals="57" methods="50" coveredmethods="26" elements="322" coveredelements="177" complexity="0" loc="141" ncloc="141" packages="3" files="7" classes="7"/>
+<coverage generated="1768290477347" clover="3.2.0">
+  <project timestamp="1768290477347" name="All files">
+    <metrics statements="150" coveredstatements="120" conditionals="137" coveredconditionals="86" methods="53" coveredmethods="38" elements="340" coveredelements="244" complexity="0" loc="150" ncloc="150" packages="3" files="7" classes="7"/>
     <package name="components">
-      <metrics statements="66" coveredstatements="60" conditionals="33" coveredconditionals="26" methods="19" coveredmethods="13"/>
+      <metrics statements="81" coveredstatements="66" conditionals="52" coveredconditionals="29" methods="24" coveredmethods="17"/>
       <file name="Design.css" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\components\Design.css">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
@@ -14,7 +14,7 @@
         <line num="22" count="1" type="stmt"/>
       </file>
       <file name="IndividualBarChart.vue" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\components\IndividualBarChart.vue">
-        <metrics statements="55" coveredstatements="49" conditionals="29" coveredconditionals="22" methods="16" coveredmethods="11"/>
+        <metrics statements="67" coveredstatements="52" conditionals="48" coveredconditionals="25" methods="20" coveredmethods="14"/>
         <line num="7" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
@@ -29,8 +29,8 @@
         <line num="26" count="1" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
-        <line num="31" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="32" count="0" type="stmt"/>
+        <line num="31" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="32" count="1" type="stmt"/>
         <line num="36" count="2" type="cond" truecount="3" falsecount="0"/>
         <line num="39" count="2" type="cond" truecount="2" falsecount="1"/>
         <line num="40" count="2" type="cond" truecount="2" falsecount="1"/>
@@ -38,49 +38,64 @@
         <line num="42" count="2" type="stmt"/>
         <line num="43" count="2" type="stmt"/>
         <line num="44" count="2" type="stmt"/>
-        <line num="48" count="4" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
-        <line num="55" count="1" type="stmt"/>
-        <line num="57" count="6" type="stmt"/>
-        <line num="58" count="1" type="stmt"/>
-        <line num="59" count="1" type="stmt"/>
-        <line num="60" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="61" count="1" type="stmt"/>
-        <line num="62" count="1" type="stmt"/>
-        <line num="63" count="1" type="stmt"/>
-        <line num="64" count="1" type="stmt"/>
-        <line num="66" count="1" type="stmt"/>
-        <line num="67" count="1" type="stmt"/>
-        <line num="69" count="1" type="stmt"/>
-        <line num="72" count="1" type="stmt"/>
-        <line num="73" count="1" type="stmt"/>
-        <line num="77" count="1" type="stmt"/>
-        <line num="78" count="0" type="stmt"/>
-        <line num="82" count="1" type="stmt"/>
-        <line num="83" count="1" type="stmt"/>
-        <line num="87" count="1" type="stmt"/>
-        <line num="88" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="91" count="1" type="stmt"/>
-        <line num="95" count="2" type="stmt"/>
-        <line num="99" count="2" type="stmt"/>
-        <line num="100" count="0" type="cond" truecount="2" falsecount="0"/>
-        <line num="101" count="6" type="cond" truecount="1" falsecount="1"/>
-        <line num="103" count="2" type="stmt"/>
-        <line num="104" count="0" type="cond" truecount="4" falsecount="0"/>
-        <line num="106" count="0" type="cond" truecount="2" falsecount="0"/>
-        <line num="113" count="2" type="stmt"/>
-        <line num="114" count="2" type="stmt"/>
+        <line num="48" count="3" type="stmt"/>
+        <line num="53" count="20" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="68" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="69" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="70" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="71" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="73" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="74" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="85" count="3" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="94" count="6" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="104" count="0" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="110" count="1" type="stmt"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="119" count="1" type="stmt"/>
+        <line num="120" count="1" type="stmt"/>
+        <line num="124" count="1" type="stmt"/>
+        <line num="125" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="128" count="1" type="stmt"/>
+        <line num="132" count="2" type="stmt"/>
+        <line num="136" count="2" type="stmt"/>
+        <line num="137" count="0" type="cond" truecount="2" falsecount="0"/>
+        <line num="138" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="2" type="stmt"/>
+        <line num="141" count="0" type="cond" truecount="4" falsecount="0"/>
+        <line num="143" count="0" type="cond" truecount="2" falsecount="0"/>
+        <line num="150" count="2" type="stmt"/>
+        <line num="151" count="2" type="stmt"/>
       </file>
       <file name="PieChart.vue" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\components\PieChart.vue">
-        <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="2"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
+        <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="3"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
-        <line num="21" count="1" type="stmt"/>
-        <line num="26" count="2" type="stmt"/>
-        <line num="27" count="2" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
       </file>
     </package>
     <package name="components.data">
@@ -90,51 +105,59 @@
       </file>
     </package>
     <package name="utils">
-      <metrics statements="75" coveredstatements="34" conditionals="98" coveredconditionals="31" methods="31" coveredmethods="13"/>
+      <metrics statements="69" coveredstatements="54" conditionals="85" coveredconditionals="57" methods="29" coveredmethods="21"/>
       <file name="ChartData.js" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\utils\ChartData.js">
-        <metrics statements="39" coveredstatements="25" conditionals="36" coveredconditionals="16" methods="20" coveredmethods="9"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="20" type="stmt"/>
+        <metrics statements="47" coveredstatements="38" conditionals="45" coveredconditionals="31" methods="22" coveredmethods="15"/>
+        <line num="3" count="4" type="stmt"/>
+        <line num="4" count="31" type="stmt"/>
         <line num="5" count="0" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
         <line num="8" count="0" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
-        <line num="13" count="100" type="stmt"/>
-        <line num="14" count="100" type="cond" truecount="1" falsecount="1"/>
-        <line num="18" count="20" type="stmt"/>
-        <line num="19" count="20" type="stmt"/>
-        <line num="20" count="20" type="stmt"/>
-        <line num="21" count="20" type="stmt"/>
-        <line num="22" count="20" type="stmt"/>
-        <line num="23" count="20" type="cond" truecount="1" falsecount="1"/>
-        <line num="24" count="20" type="cond" truecount="1" falsecount="2"/>
-        <line num="25" count="20" type="stmt"/>
-        <line num="29" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="32" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="41" count="2" type="cond" truecount="3" falsecount="1"/>
-        <line num="42" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="45" count="2" type="stmt"/>
-        <line num="47" count="2" type="cond" truecount="3" falsecount="1"/>
-        <line num="48" count="20" type="stmt"/>
+        <line num="13" count="155" type="stmt"/>
+        <line num="14" count="155" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="31" type="stmt"/>
+        <line num="19" count="31" type="stmt"/>
+        <line num="20" count="31" type="stmt"/>
+        <line num="21" count="31" type="stmt"/>
+        <line num="22" count="31" type="stmt"/>
+        <line num="23" count="31" type="cond" truecount="1" falsecount="1"/>
+        <line num="24" count="31" type="cond" truecount="1" falsecount="2"/>
+        <line num="25" count="31" type="stmt"/>
+        <line num="29" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="41" count="6" type="cond" truecount="3" falsecount="1"/>
+        <line num="42" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="6" type="stmt"/>
+        <line num="47" count="6" type="cond" truecount="3" falsecount="1"/>
+        <line num="48" count="31" type="stmt"/>
         <line num="50" count="0" type="stmt"/>
         <line num="51" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="53" count="0" type="stmt"/>
-        <line num="57" count="2" type="stmt"/>
-        <line num="58" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="61" count="20" type="stmt"/>
-        <line num="64" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="65" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="67" count="20" type="stmt"/>
-        <line num="68" count="20" type="stmt"/>
-        <line num="69" count="2" type="stmt"/>
+        <line num="57" count="6" type="stmt"/>
+        <line num="58" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="61" count="31" type="stmt"/>
+        <line num="64" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="67" count="31" type="stmt"/>
+        <line num="68" count="31" type="stmt"/>
+        <line num="69" count="6" type="stmt"/>
+        <line num="75" count="2" type="cond" truecount="2" falsecount="1"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="78" count="13" type="cond" truecount="3" falsecount="1"/>
+        <line num="79" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="2" type="stmt"/>
+        <line num="82" count="5" type="stmt"/>
+        <line num="83" count="2" type="stmt"/>
       </file>
       <file name="ChartUtils.js" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\utils\ChartUtils.js">
-        <metrics statements="36" coveredstatements="9" conditionals="62" coveredconditionals="15" methods="11" coveredmethods="4"/>
+        <metrics statements="22" coveredstatements="16" conditionals="40" coveredconditionals="26" methods="7" coveredmethods="6"/>
         <line num="8" count="2" type="stmt"/>
         <line num="11" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="12" count="2" type="cond" truecount="2" falsecount="0"/>
@@ -143,34 +166,20 @@
         <line num="15" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="16" count="0" type="stmt"/>
         <line num="20" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="24" count="2" type="cond" truecount="2" falsecount="2"/>
+        <line num="24" count="1" type="cond" truecount="2" falsecount="2"/>
         <line num="25" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="27" count="0" type="stmt"/>
         <line num="30" count="2" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="54" count="0" type="stmt"/>
-        <line num="55" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="56" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="58" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="60" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="61" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="44" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="59" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="60" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="62" count="0" type="stmt"/>
-        <line num="76" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="78" count="0" type="stmt"/>
-        <line num="79" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="80" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="82" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="90" count="0" type="stmt"/>
-        <line num="91" count="0" type="stmt"/>
-        <line num="92" count="0" type="stmt"/>
-        <line num="112" count="5" type="stmt"/>
       </file>
     </package>
   </project>
