@@ -20,5 +20,15 @@
     "jsdom": "^27.4.0",
     "vite": "^7.2.4",
     "vitest": "^4.0.16"
+  },
+  "vitest": {
+    "coverage": {
+      "provider": "v8",
+      "reporter": ["text", "html"],
+      "branches": true,
+      "threshold": {
+        "global": { "lines": 100, "functions": 100, "branches": 100, "statements": 100 }
+      }
+    }
   }
 }

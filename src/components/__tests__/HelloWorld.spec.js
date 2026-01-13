@@ -2,6 +2,8 @@ import { shallowMount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import HelloWorld from '../HelloWorld.vue'
 
+vi.mock('chart.js/auto', () => ({ default: class { constructor(){ } update(){} destroy(){} }}))
+
 describe('HelloWorld.vue', () => {
   it('renders title, subtext and theme button', () => {
     const wrapper = shallowMount(HelloWorld)

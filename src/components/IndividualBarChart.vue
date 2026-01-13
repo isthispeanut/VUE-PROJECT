@@ -101,7 +101,7 @@ onMounted(() => {
         localData.value = await fetchPassengers()
       } catch (err) {
         error.value = err
-        localData.value = mockData // explicit fallback
+        localData.value = mockData 
       } finally {
         loading.value = false
       }

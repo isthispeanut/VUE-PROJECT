@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.51% </span>
+                <span class="strong">48.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/31</span>
+                <span class='fraction'>15/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/40</span>
+                <span class='fraction'>20/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.72% </span>
+                <span class="strong">54.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/22</span>
+                <span class='fraction'>12/22</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -135,14 +135,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,7 +157,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,15 +179,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,16 +243,16 @@ export function buildBarConfig({ data = { labels: [], datasets: [] }, options = 
 // Simple parser used by the pie chart: convert passengers JSON into labels
 // and counts.
 // Build a generic pie chart config from Chart.js `data` and optional `options`.
-export function buildPieConfig({ data = { labels: [], datasets: [] }, options = {} } = {}) {
-  const defaultOptions = { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
-  const mergedOptions = { ...defaultOptions, ...(options || <span class="branch-1 cbranch-no" title="branch not covered" >{})</span> }
-  return { type: 'pie', data, options: mergedOptions }
+export function <span class="fstat-no" title="function not covered" >buildPieConfig(</span>{ data = <span class="branch-0 cbranch-no" title="branch not covered" >{ labels: [], datasets: [] },</span> options = <span class="branch-0 cbranch-no" title="branch not covered" >{} </span>} = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+  const defaultOptions = <span class="cstat-no" title="statement not covered" >{ plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }</span>
+  const mergedOptions = <span class="cstat-no" title="statement not covered" >{ ...defaultOptions, ...(options || {}) }</span>
+<span class="cstat-no" title="statement not covered" >  return { type: 'pie', data, options: mergedOptions }</span>
 }
 &nbsp;
 // Unified factory: returns a Chart.js config for a given chart `type` and `payload`.
 export function createChartConfig({ type = 'bar', data = undefined, options = undefined } = {}) {
-  if (type === 'bar') return buildBarConfig({ data, options })
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (type === 'pie') return buildPieConfig({ data, options })
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (type === 'bar') return buildBarConfig({ data, options })
+<span class="cstat-no" title="statement not covered" >  if (type === 'pie') <span class="cstat-no" title="statement not covered" >return buildPieConfig({ data, options })</span></span>
   // fallback: assume bar
 <span class="cstat-no" title="statement not covered" >  return buildBarConfig({ data, options })</span>
 }
@@ -265,7 +265,7 @@ export default { createChartLifecycle, buildBarConfig, buildPieConfig, createCha
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-13T07:47:57.291Z
+                at 2026-01-13T08:06:46.945Z
             </div>
         <script src="../prettify.js"></script>
         <script>
