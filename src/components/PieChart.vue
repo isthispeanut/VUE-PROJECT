@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import mockData from './data/MockData.json'
-import { createChartLifecycle, buildPieConfig } from '../utils/ChartUtils.js'
+import { createChartLifecycle, createChartConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
 // Parsing and config builders live in src/utils/ChartUtils.js
 
 // create lifecycle handlers for this chart instance (reusable pattern)
-const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => buildPieConfig(mockData))
+const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => createChartConfig({ type: 'pie', payload: { json: mockData } }))
 
 onMounted(() => {
   mount()

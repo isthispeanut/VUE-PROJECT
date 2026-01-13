@@ -104,4 +104,21 @@ export function buildPieConfig(json, colors) {
   }
 }
 
-export default { createChartLifecycle, buildBarConfig, parseJsonToPieData, buildPieConfig }
+// Unified factory: returns a Chart.js config for a given chart `type` and `payload`.
+// Usage:
+//  createChartConfig({ type: 'bar', payload: { labels, values, rows, metricIndex, headers, metrics } })
+//  createChartConfig({ type: 'pie', payload: { json, colors } })
+export function createChartConfig({ type = 'bar', payload = {} } = {}) {
+  if (type === 'bar') {
+    // payload should match buildBarConfig signature
+    return buildBarConfig(payload)
+  }
+  if (type === 'pie') {
+    // payload: { json, colors }
+    return buildPieConfig(payload.json, payload.colors)
+  }
+  // fallback: try to return a bar config for unknown types to avoid runtime crashes
+  return buildBarConfig(payload)
+}
+
+export default { createChartLifecycle, buildBarConfig, parseJsonToPieData, buildPieConfig, createChartConfig }

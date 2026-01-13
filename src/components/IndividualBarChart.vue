@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import mockData from './data/MockData.json'
 import { METRICS, buildSeries } from '../utils/ChartData.js'
-import { createChartLifecycle, buildBarConfig } from '../utils/ChartUtils.js'
+import { createChartLifecycle, createChartConfig } from '../utils/ChartUtils.js'
 
 const CanvasRef = ref(null)
 
@@ -45,7 +45,7 @@ function RebuildSeries() {
 }
 
 // Create a computed, derived Chart.js config so the chart becomes reactive
-const chartConfig = computed(() => buildBarConfig({ labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics }))
+const chartConfig = computed(() => createChartConfig({ type: 'bar', payload: { labels: Labels.value, values: Values.value, rows: Rows.value, metricIndex: MetricIndex.value, headers: Headers.value, metrics: Metrics } }))
 
 // Create the Chart.js lifecycle manager from shared helper (factory returns current computed config)
 const { mount, unmount, update } = createChartLifecycle(CanvasRef, () => chartConfig.value)
