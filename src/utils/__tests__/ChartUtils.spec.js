@@ -40,6 +40,12 @@ describe('ChartUtils generic factory', () => {
     expect(p.type).toBe('pie')
   })
 
+  it('createChartConfig falls back to bar for unknown types', () => {
+    const data = { labels: [], datasets: [] }
+    const cfg = createChartConfig({ type: 'radar', data })
+    expect(cfg.type).toBe('bar')
+  })
+
   it('createChartLifecycle mount/update/unmount behavior', () => {
     // Chart is the mocked constructor imported above
     // no canvas -> mount should no-op
@@ -47,6 +53,12 @@ describe('ChartUtils generic factory', () => {
     const cfg = { type: 'bar', data: { labels: [], datasets: [] } }
     const lifecycle = createChartLifecycle(canvasRef, () => cfg)
     lifecycle.mount()
+    expect(Chart).not.toHaveBeenCalled()
+
+    // buildConfig returns falsy -> mount should no-op even if canvas present
+    const canvasRef2 = { value: { getContext: () => ({}) } }
+    const lifecycle2 = createChartLifecycle(canvasRef2, () => null)
+    lifecycle2.mount()
     expect(Chart).not.toHaveBeenCalled()
 
     // canvas without context -> no mount
@@ -68,8 +80,16 @@ describe('ChartUtils generic factory', () => {
     expect(created.update).toHaveBeenCalled()
     expect(created.cfg).toBe(cfg) // constructor got initial cfg
 
+    // calling update when there is no instance should no-op (no throw)
+    const lifecycleNoInstance = createChartLifecycle({ value: null }, () => cfg)
+    expect(() => lifecycleNoInstance.update({})).not.toThrow()
+
     // unmount should call destroy
     lifecycle.unmount()
     expect(created.destroy).toHaveBeenCalled()
+
+    // unmount when no instance should no-op
+    const lifecycleEmpty = createChartLifecycle({ value: null }, () => cfg)
+    expect(() => lifecycleEmpty.unmount()).not.toThrow()
   })
 })

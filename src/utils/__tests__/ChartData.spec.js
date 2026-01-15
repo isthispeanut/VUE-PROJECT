@@ -105,4 +105,114 @@ describe('ChartData utilities', () => {
     const out = buildSeries([], 'purchases', { normalize: true })
     expect(out.values).toEqual([])
   })
+
+  it('safeNumber returns 0 for NaN/Infinity and numeric otherwise', () => {
+    const fn = require('../ChartData.js').__getSafeNumber?.() || require('../ChartData.js').safeNumber
+    // try numeric string
+    expect(fn('42')).toBe(42)
+    // NaN
+    expect(fn('not-a-number')).toBe(0)
+    // Infinity
+    expect(fn(Infinity)).toBe(0)
+  })
+
+  it('computeDerived builds name from title/first/last and falls back to passengerId/Unknown', () => {
+    const compute = require('../ChartData.js').__getComputeDerived?.() || require('../ChartData.js').computeDerived
+    const p1 = { title: 'Dr', firstName: 'Al', lastName: 'Capone', purchases: 1 }
+    const r1 = compute(p1)
+    expect(r1.name).toBe('Dr Al Capone')
+    const p2 = { passengerId: 'PID999' }
+    const r2 = compute(p2)
+    expect(r2.name).toBe('PID999')
+    const r3 = compute({})
+    expect(r3.name).toBe('Unknown')
+  })
+
+  it('minMaxNormalize handles empty, equal and normal ranges', () => {
+    const mn = require('../ChartData.js').__getMinMaxNormalize?.() || require('../ChartData.js').minMaxNormalize
+    expect(mn([])).toEqual([])
+    expect(mn([5,5,5])).toEqual([0,0,0])
+    const out = mn([0, 50, 100])
+    expect(out.length).toBe(3)
+    expect(Math.round(out[0])).toBe(0)
+    expect(Math.round(out[2])).toBe(100)
+  })
+
+  it('uses METRICS accessor for avgSpend metric', () => {
+    const passengers = [ { avgSpend: 5 }, { avgSpend: 15 } ]
+    const out = buildSeries(passengers, 'avgSpend')
+    expect(out.values).toEqual([5,15])
+  })
+
+  it('when METRICS entry exists but accessor is not a function, fallback branch for totalSpend executes', () => {
+    const { METRICS } = require('../ChartData.js')
+    // backup and modify the totalSpend entry to remove accessor
+    const original = METRICS.splice(0, METRICS.length, ...METRICS.map(m => ({ ...m })))
+    try {
+      // find totalSpend entry and remove accessor
+      const idx = METRICS.findIndex(m => m.key === 'totalSpend')
+      if (idx >= 0) METRICS[idx] = { ...METRICS[idx], accessor: undefined }
+      const passengers = [ { purchases: 2, avgSpend: 5 }, { purchases: 3, avgSpend: 10 } ]
+      const ts = buildSeries(passengers, 'totalSpend')
+      expect(ts.values[0]).toBe(10)
+    } finally {
+      // restore METRICS
+      METRICS.splice(0, METRICS.length, ...original)
+    }
+  })
+
+  it('minMaxNormalize returns null when given null', () => {
+    const mn = require('../ChartData.js').minMaxNormalize
+    expect(mn(null)).toBeNull()
+  })
+
+  it('falls back to property access when accessor is present but not a function for avgSpend and spendPerVisit', () => {
+    const mod = require('../ChartData.js')
+    const { METRICS } = mod
+    const original = METRICS.splice(0, METRICS.length, ...METRICS.map(m => ({ ...m })))
+    try {
+      // make avgSpend accessor invalid
+      const ai = METRICS.findIndex(m => m.key === 'avgSpend')
+      if (ai >= 0) METRICS[ai] = { ...METRICS[ai], accessor: 'not-a-fn' }
+      const passengers = [ { avgSpend: 7 }, { avgSpend: 3 } ]
+      const out = buildSeries(passengers, 'avgSpend')
+      expect(out.values).toEqual([7,3])
+
+      // make spendPerVisit accessor invalid and ensure fallback uses r.spendPerVisit
+      const si = METRICS.findIndex(m => m.key === 'spendPerVisit')
+      if (si >= 0) METRICS[si] = { ...METRICS[si], accessor: null }
+      // provide values that computeDerived will turn into spendPerVisit
+      const p2 = [ { purchases: 5, avgSpend: 1, visits: 1 }, { purchases: 10, avgSpend: 1, visits: 1 } ]
+      const out2 = buildSeries(p2, 'spendPerVisit')
+      expect(out2.values).toEqual([5,10])
+    } finally {
+      METRICS.splice(0, METRICS.length, ...original)
+    }
+  })
+
+  it('buildSeries handles undefined passengers param', () => {
+    const out = buildSeries(undefined, 'purchases')
+    expect(out.labels).toEqual([])
+    expect(out.values).toEqual([])
+  })
+
+  it('minMaxNormalize handles undefined and NaN-only arrays', () => {
+    const mn = require('../ChartData.js').minMaxNormalize
+    expect(mn(undefined)).toBeUndefined()
+    // NaN-only array: min/max will be NaN and min===max is false, map will produce NaN values -> safe to check length
+    const nanOut = mn([NaN, NaN])
+    expect(Array.isArray(nanOut)).toBe(true)
+    expect(nanOut.length).toBe(2)
+  })
+
+  it('computeMinMax returns correct min and max including NaN behavior', () => {
+    const cm = require('../ChartData.js').computeMinMax
+    const r = cm([0, 50, 100])
+    expect(r.min).toBe(0)
+    expect(r.max).toBe(100)
+    const r2 = cm([NaN, NaN])
+    // iterative min/max on NaN-only array yields non-finite results
+    expect(Number.isFinite(r2.min)).toBe(false)
+    expect(Number.isFinite(r2.max)).toBe(false)
+  })
 })

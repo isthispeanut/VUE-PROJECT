@@ -79,6 +79,29 @@ describe('IndividualBarChart.vue', () => {
     wrapper.unmount()
   })
 
+  it('select and sort controls exist and affect values order', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockData) })))
+    const wrapper = shallowMount(IndividualBarChart)
+    await wait(); await wait()
+    // select#metric should exist and have options equal to Headers length
+    const select = wrapper.find('select#metric')
+    expect(select.exists()).toBe(true)
+    const headersLen = wrapper.vm.Headers.length
+    expect(select.findAll('option').length).toBe(headersLen)
+
+    // set SortOrder to desc and ensure Values are sorted descending
+    wrapper.vm.SortOrder = 'desc'
+    await wait()
+    const valsDesc = [...wrapper.vm.Values]
+    // set asc and expect values to reorder
+    wrapper.vm.SortOrder = 'asc'
+    await wait()
+    const valsAsc = [...wrapper.vm.Values]
+    expect(valsAsc[0]).toBeLessThanOrEqual(valsAsc[valsAsc.length-1])
+    expect(valsDesc[0]).toBeGreaterThanOrEqual(valsDesc[valsDesc.length-1])
+    wrapper.unmount()
+  })
+
   it('chart instance update is called when config changes and destroyed on unmount', async () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockData) })))
     const wrapper = shallowMount(IndividualBarChart)

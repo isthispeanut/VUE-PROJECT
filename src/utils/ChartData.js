@@ -9,12 +9,12 @@ export const METRICS = [
   { key: 'spendPerVisit', label: 'SpendPerVisit', accessor: r => r.spendPerVisit }
 ]
 
-function safeNumber(v) {
+export function safeNumber(v) {
 	const n = Number(v)
 	return Number.isFinite(n) ? n : 0
 }
 
-function computeDerived(p) {
+export function computeDerived(p) {
 	const purchases = safeNumber(p.purchases)
 	const visits = safeNumber(p.visits)
 	const miles = safeNumber(p.miles)
@@ -25,12 +25,22 @@ function computeDerived(p) {
 	return { ...p, purchases, visits, miles, avgSpend, totalSpend, spendPerVisit, name }
 }
 
-function minMaxNormalize(arr) {
+export function minMaxNormalize(arr) {
 	if (!arr || arr.length === 0) return arr
-	const min = Math.min(...arr)
-	const max = Math.max(...arr)
+	const { min, max } = computeMinMax(arr)
 	if (min === max) return arr.map(() => 0)
 	return arr.map(v => ((v - min) / (max - min)) * 100)
+}
+
+export function computeMinMax(arr) {
+	if (!arr || arr.length === 0) return { min: undefined, max: undefined }
+	let min = Infinity
+	let max = -Infinity
+	for (const v of arr) {
+		if (v < min) min = v
+		if (v > max) max = v
+	}
+	return { min, max }
 }
 
 // buildSeries(passengers, metricKey, options)
