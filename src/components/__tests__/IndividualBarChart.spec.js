@@ -78,4 +78,41 @@ describe('IndividualBarChart.vue', () => {
     expect(wrapper.vm.Values).not.toEqual(beforeValues)
     wrapper.unmount()
   })
+
+  it('chart instance update is called when config changes and destroyed on unmount', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockData) })))
+    const wrapper = shallowMount(IndividualBarChart)
+    await wait(); await wait()
+    // Chart mock ctor returned instance is available via mock.results
+    const chartInstance = Chart.mock.results[0] && Chart.mock.results[0].value
+    expect(chartInstance).toBeDefined()
+
+    // change a control to cause chartConfig to change -> should trigger update()
+    wrapper.vm.MetricIndex = 2
+    await wait()
+    expect(chartInstance.update).toHaveBeenCalled()
+
+    // unmount should call destroy on the instance
+    wrapper.unmount()
+    expect(chartInstance.destroy).toHaveBeenCalled()
+  })
+
+  it('tooltip label callback formats values and optional parts correctly', async () => {
+    const wrapper = shallowMount(IndividualBarChart)
+    // case: row contains purchases and visits
+    wrapper.vm.Rows = [{ name: 'Jane Doe', value: 123, purchases: 3, visits: 7 }]
+    wrapper.vm.MetricIndex = 0
+    // grab the tooltip label callback
+    const cb = wrapper.vm.chartOptions.plugins.tooltip.callbacks.label
+    const label = cb({ dataIndex: 0, raw: 123 })
+    expect(label).toContain('Purchases: 3')
+    expect(label).toContain('Visits: 7')
+
+    // case: row missing name and numeric value not finite -> falls back to ctx.raw and 'Unknown'
+    wrapper.vm.Rows = [{ value: 'NaN' }]
+    const label2 = cb({ dataIndex: 0, raw: 42 })
+    expect(label2).toContain('Unknown')
+    expect(label2).toContain('42')
+    wrapper.unmount()
+  })
 })
