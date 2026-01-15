@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildSeries, METRICS, parseJsonToPieData } from '../ChartData.js'
+import { buildSeries, METRICS, parseJsonToPieData, safeNumber, computeDerived, minMaxNormalize, computeMinMax } from '../ChartData.js'
 
 describe('ChartData utilities', () => {
   it('buildSeries computes labels, values and rows with default metric', () => {
@@ -214,5 +214,41 @@ describe('ChartData utilities', () => {
     // iterative min/max on NaN-only array yields non-finite results
     expect(Number.isFinite(r2.min)).toBe(false)
     expect(Number.isFinite(r2.max)).toBe(false)
+  })
+
+  it('directly exercises METRICS accessors and safeNumber fallback', () => {
+    // ensure each accessor function runs (covers arrow-accessor lines)
+    for (const m of METRICS) {
+      if (typeof m.accessor === 'function') {
+        // call with an object that has a property matching common keys
+        const sample = { purchases: 3, visits: 1, miles: 100, avgSpend: 5, totalSpend: 15, spendPerVisit: 15 }
+        // should not throw and should produce a number or value
+        const v = m.accessor(sample)
+        expect(v === undefined || v === null || typeof v === 'number' || typeof v === 'string').toBe(true)
+      }
+    }
+
+    // safeNumber directly
+    expect(safeNumber('123')).toBe(123)
+    expect(safeNumber('nope')).toBe(0)
+    expect(safeNumber(Infinity)).toBe(0)
+  })
+
+  it('computeMinMax handles empty arrays and minMaxNormalize handles equal-values and undefined', () => {
+    const empty = computeMinMax([])
+    expect(empty.min).toBeUndefined()
+    expect(empty.max).toBeUndefined()
+
+    expect(minMaxNormalize([])).toEqual([])
+    expect(minMaxNormalize([5,5])).toEqual([0,0])
+
+    const norm = minMaxNormalize([0, 50, 100])
+    expect(norm.length).toBe(3)
+  })
+
+  it('parseJsonToPieData with undefined yields empty labels/values', () => {
+    const p = parseJsonToPieData(undefined)
+    expect(p.labels).toEqual([])
+    expect(p.values).toEqual([])
   })
 })

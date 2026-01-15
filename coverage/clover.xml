@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1768469934278" clover="3.2.0">
-  <project timestamp="1768469934278" name="All files">
-    <metrics statements="156" coveredstatements="151" conditionals="149" coveredconditionals="123" methods="54" coveredmethods="49" elements="359" coveredelements="323" complexity="0" loc="156" ncloc="156" packages="3" files="7" classes="7"/>
+<coverage generated="1768487124202" clover="3.2.0">
+  <project timestamp="1768487124202" name="All files">
+    <metrics statements="156" coveredstatements="151" conditionals="149" coveredconditionals="125" methods="54" coveredmethods="49" elements="359" coveredelements="325" complexity="0" loc="156" ncloc="156" packages="3" files="7" classes="7"/>
     <package name="components">
       <metrics statements="81" coveredstatements="78" conditionals="52" coveredconditionals="43" methods="24" coveredmethods="21"/>
       <file name="Design.css" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\components\Design.css">
@@ -105,18 +105,18 @@
       </file>
     </package>
     <package name="utils">
-      <metrics statements="75" coveredstatements="73" conditionals="97" coveredconditionals="80" methods="30" coveredmethods="28"/>
+      <metrics statements="75" coveredstatements="73" conditionals="97" coveredconditionals="82" methods="30" coveredmethods="28"/>
       <file name="ChartData.js" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\utils\ChartData.js">
-        <metrics statements="53" coveredstatements="51" conditionals="53" coveredconditionals="42" methods="23" coveredmethods="21"/>
+        <metrics statements="53" coveredstatements="51" conditionals="53" coveredconditionals="44" methods="23" coveredmethods="21"/>
         <line num="3" count="2" type="stmt"/>
-        <line num="4" count="152" type="stmt"/>
-        <line num="5" count="20" type="stmt"/>
-        <line num="6" count="10" type="stmt"/>
-        <line num="7" count="4" type="stmt"/>
-        <line num="8" count="6" type="stmt"/>
-        <line num="9" count="6" type="stmt"/>
-        <line num="13" count="1016" type="stmt"/>
-        <line num="14" count="1016" type="cond" truecount="2" falsecount="0"/>
+        <line num="4" count="153" type="stmt"/>
+        <line num="5" count="21" type="stmt"/>
+        <line num="6" count="11" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="13" count="1019" type="stmt"/>
+        <line num="14" count="1019" type="cond" truecount="2" falsecount="0"/>
         <line num="18" count="5" type="stmt"/>
         <line num="19" count="204" type="stmt"/>
         <line num="20" count="204" type="stmt"/>
@@ -125,17 +125,17 @@
         <line num="23" count="204" type="cond" truecount="2" falsecount="0"/>
         <line num="24" count="204" type="cond" truecount="3" falsecount="0"/>
         <line num="25" count="204" type="stmt"/>
-        <line num="29" count="4" type="cond" truecount="4" falsecount="0"/>
-        <line num="30" count="3" type="stmt"/>
-        <line num="31" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="32" count="13" type="stmt"/>
-        <line num="36" count="3" type="cond" truecount="3" falsecount="1"/>
-        <line num="37" count="3" type="stmt"/>
-        <line num="38" count="3" type="stmt"/>
-        <line num="39" count="3" type="stmt"/>
-        <line num="40" count="15" type="cond" truecount="2" falsecount="0"/>
-        <line num="41" count="15" type="cond" truecount="2" falsecount="0"/>
-        <line num="43" count="3" type="stmt"/>
+        <line num="29" count="7" type="cond" truecount="4" falsecount="0"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="31" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="16" type="stmt"/>
+        <line num="36" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="37" count="5" type="stmt"/>
+        <line num="38" count="5" type="stmt"/>
+        <line num="39" count="5" type="stmt"/>
+        <line num="40" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="41" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="5" type="stmt"/>
         <line num="51" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="55" count="84" type="stmt"/>
@@ -153,14 +153,14 @@
         <line num="77" count="204" type="stmt"/>
         <line num="78" count="204" type="stmt"/>
         <line num="79" count="36" type="stmt"/>
-        <line num="85" count="6" type="cond" truecount="2" falsecount="1"/>
-        <line num="86" count="6" type="stmt"/>
-        <line num="87" count="6" type="stmt"/>
+        <line num="85" count="7" type="cond" truecount="3" falsecount="0"/>
+        <line num="86" count="7" type="stmt"/>
+        <line num="87" count="7" type="stmt"/>
         <line num="88" count="45" type="cond" truecount="4" falsecount="0"/>
         <line num="89" count="45" type="cond" truecount="2" falsecount="0"/>
-        <line num="91" count="6" type="stmt"/>
+        <line num="91" count="7" type="stmt"/>
         <line num="92" count="15" type="stmt"/>
-        <line num="93" count="6" type="stmt"/>
+        <line num="93" count="7" type="stmt"/>
       </file>
       <file name="ChartUtils.js" path="C:\Users\Rolan Semilla\Downloads\VUE-PROJECT\my-vue-app\src\utils\ChartUtils.js">
         <metrics statements="22" coveredstatements="22" conditionals="44" coveredconditionals="38" methods="7" coveredmethods="7"/>
