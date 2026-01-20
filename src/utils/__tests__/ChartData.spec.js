@@ -138,6 +138,22 @@ describe('ChartData utilities', () => {
     expect(Math.round(out[2])).toBe(100)
   })
 
+  it('computeMinMax handles mixed NaN and numeric arrays and minMaxNormalize covers mapping branch', () => {
+    const { computeMinMax, minMaxNormalize } = require('../ChartData.js')
+    // mixed NaN and numbers should produce finite min/max from numeric values
+    const r = computeMinMax([NaN, 5, 10])
+    expect(r.min).toBe(5)
+    expect(r.max).toBe(10)
+
+    // equal values -> zeros path
+    expect(minMaxNormalize([7,7])).toEqual([0,0])
+
+    // mapping branch: normal range
+    const mapped = minMaxNormalize([0, 50, 100])
+    expect(Array.isArray(mapped)).toBe(true)
+    expect(mapped.length).toBe(3)
+  })
+
   it('uses METRICS accessor for avgSpend metric', () => {
     const passengers = [ { avgSpend: 5 }, { avgSpend: 15 } ]
     const out = buildSeries(passengers, 'avgSpend')
@@ -196,6 +212,38 @@ describe('ChartData utilities', () => {
     expect(out.values).toEqual([])
   })
 
+  it('buildSeries with no arguments uses defaults and returns empty arrays', () => {
+    const out = buildSeries()
+    expect(out.labels).toEqual([])
+    expect(out.values).toEqual([])
+  })
+
+  it('buildSeries explicit undefined args exercises default-assignment branch', () => {
+    const out = buildSeries(undefined, undefined, undefined)
+    expect(out.labels).toEqual([])
+    expect(out.values).toEqual([])
+  })
+
+  it('buildSeries handles null options and accessor-not-function fallback for unknown metric', () => {
+    const { METRICS, buildSeries } = require('../ChartData.js')
+    // call with null options to exercise options || {} path
+    const passengers = [ { firstName: 'Z', purchases: 1 } ]
+    const out = buildSeries(passengers, 'purchases', null)
+    expect(out.values.length).toBe(1)
+
+    // temporarily set accessor to non-function to hit fallback branch
+    const original = METRICS.map(m => ({ ...m }))
+    try {
+      const idx = METRICS.findIndex(m => m.key === 'avgSpend')
+      if (idx >= 0) METRICS[idx].accessor = 'not-a-fn'
+      const p2 = [ { avgSpend: 9 }, { avgSpend: 3 } ]
+      const o2 = buildSeries(p2, 'avgSpend')
+      expect(o2.values).toEqual([9,3])
+    } finally {
+      METRICS.splice(0, METRICS.length, ...original)
+    }
+  })
+
   it('minMaxNormalize handles undefined and NaN-only arrays', () => {
     const mn = require('../ChartData.js').minMaxNormalize
     expect(mn(undefined)).toBeUndefined()
@@ -250,5 +298,23 @@ describe('ChartData utilities', () => {
     const p = parseJsonToPieData(undefined)
     expect(p.labels).toEqual([])
     expect(p.values).toEqual([])
+  })
+
+  it('buildSeries fallback branch for totalSpend and spendPerVisit when METRICS is empty', () => {
+    const mod = require('../ChartData.js')
+    const { METRICS, buildSeries } = mod
+    // backup and clear metrics
+    const original = METRICS.splice(0, METRICS.length)
+    try {
+      const passengers = [ { purchases: 2, avgSpend: 5, visits: 1 }, { purchases: 4, avgSpend: 2, visits: 2 } ]
+      const ts = buildSeries(passengers, 'totalSpend')
+      expect(ts.values.length).toBe(2)
+      expect(ts.values[0]).toBe(10)
+
+      const spv = buildSeries(passengers, 'spendPerVisit')
+      expect(spv.values[0]).toBe(10)
+    } finally {
+      METRICS.splice(0, METRICS.length, ...original)
+    }
   })
 })

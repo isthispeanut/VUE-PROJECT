@@ -44,6 +44,12 @@ function RebuildSeries() {
   Values.value = series.values
 }
 
+function optionLabel(h, idx) {
+  return h || 'Metric ' + idx
+}
+
+const HeaderLabels = computed(() => Headers.value.map((h, idx) => optionLabel(h, idx)))
+
 // Build Chart.js `data` (labels + datasets) from domain series produced by buildSeries
 const chartData = computed(() => ({
   labels: Labels.value,
@@ -122,7 +128,7 @@ watch(sourceData, () => {
 
 // When the derived chart config changes, update the existing Chart.js instance
 watch(chartConfig, (cfg) => {
-  if (cfg) update(cfg)
+  update(cfg)
 })
 
 onBeforeUnmount(() => { unmount() })
@@ -134,8 +140,8 @@ onBeforeUnmount(() => { unmount() })
       <h3>Passenger Breakdown</h3>
       <small>Select metric to compare</small>
       <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-        <select id="metric" v-model.number="MetricIndex" style="padding:6px 8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
-          <option v-for="(h, idx) in Headers" :key="idx" :value="idx">{{ h || 'Metric ' + idx }}</option>
+        <select id="metric" v-model="MetricIndex" style="padding:6px 8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
+          <option v-for="(label, idx) in HeaderLabels" :key="idx" :value="idx">{{ label }}</option>
         </select>
         <label style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#444;">
           <input type="checkbox" v-model="Normalize" /> Normalize

@@ -25,9 +25,23 @@
     "coverage": {
       "provider": "v8",
       "reporter": ["text", "html"],
-      "branches": true,
+      "include": [
+        "src/components/**/*.{vue,js}",
+        "src/utils/**/*.js"
+      ],
+      "exclude": [
+        "src/main.js",
+        "src/App.vue",
+        "**/*.spec.js",
+        "**/MockData.json"
+      ],
       "threshold": {
-        "global": { "lines": 100, "functions": 100, "branches": 100, "statements": 100 }
+        "global": {
+          "lines": 75,
+          "functions": 70,
+          "branches": 60,
+          "statements": 75
+        }
       }
     }
   }

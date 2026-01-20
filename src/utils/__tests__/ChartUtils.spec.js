@@ -92,4 +92,21 @@ describe('ChartUtils generic factory', () => {
     const lifecycleEmpty = createChartLifecycle({ value: null }, () => cfg)
     expect(() => lifecycleEmpty.unmount()).not.toThrow()
   })
+
+  it('mount accepts static config object (non-function) and update handles instance without update method', () => {
+    const canvasRef = { value: { getContext: () => ({}) } }
+    const staticCfg = { type: 'bar', data: { labels: [], datasets: [] } }
+    const lifecycle = createChartLifecycle(canvasRef, staticCfg)
+    // should use static config without throwing
+    lifecycle.mount()
+    expect(Chart).toHaveBeenCalled()
+
+    // simulate instance without update method
+    const created = Chart.mock.results[Chart.mock.results.length - 1].value
+    // remove update to exercise typeof guard
+    delete created.update
+    // calling update with newCfg should not throw even when update missing
+    expect(() => lifecycle.update({ data: { labels: ['x'], datasets: [] } })).not.toThrow()
+    lifecycle.unmount()
+  })
 })
