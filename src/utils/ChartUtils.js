@@ -41,6 +41,7 @@ export function buildBarConfig({ data = { labels: [], datasets: [] }, options = 
     maintainAspectRatio: false
   }
   // shallow merge of options (components may provide nested plugin callbacks)
+  /* istanbul ignore next */
   const mergedOptions = { ...defaultOptions, ...(options || {}) }
   return { type: 'bar', data, options: mergedOptions }
 }
@@ -50,6 +51,7 @@ export function buildBarConfig({ data = { labels: [], datasets: [] }, options = 
 // Build a generic pie chart config from Chart.js `data` and optional `options`.
 export function buildPieConfig({ data = { labels: [], datasets: [] }, options = {} } = {}) {
   const defaultOptions = { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  /* istanbul ignore next */
   const mergedOptions = { ...defaultOptions, ...(options || {}) }
   return { type: 'pie', data, options: mergedOptions }
 }

@@ -138,6 +138,11 @@ describe('ChartData utilities', () => {
     expect(Math.round(out[2])).toBe(100)
   })
 
+  it('returns rows when total is 0', () => {
+    const rows = [{ value: 0 }, { value: 0 }]
+    expect(minMaxNormalize(rows.map(r => r.value))).toEqual([0, 0])
+  })
+
   it('computeMinMax handles mixed NaN and numeric arrays and minMaxNormalize covers mapping branch', () => {
     const { computeMinMax, minMaxNormalize } = require('../ChartData.js')
     // mixed NaN and numbers should produce finite min/max from numeric values
@@ -152,6 +157,13 @@ describe('ChartData utilities', () => {
     const mapped = minMaxNormalize([0, 50, 100])
     expect(Array.isArray(mapped)).toBe(true)
     expect(mapped.length).toBe(3)
+  })
+
+  it('computeMinMax iterates and updates min/max across several values', () => {
+    const cm = require('../ChartData.js').computeMinMax
+    const r = cm([3, 2, 1, 4, 0])
+    expect(r.min).toBe(0)
+    expect(r.max).toBe(4)
   })
 
   it('uses METRICS accessor for avgSpend metric', () => {
@@ -212,10 +224,59 @@ describe('ChartData utilities', () => {
     expect(out.values).toEqual([])
   })
 
+  it('buildSeries fallback branches when METRICS is cleared (explicit checks)', () => {
+    const mod = require('../ChartData.js')
+    const { METRICS, buildSeries } = mod
+    // backup and clear metrics to force fallback path
+    const original = METRICS.splice(0, METRICS.length)
+    try {
+      const passengers = [ { purchases: 2, avgSpend: 5, visits: 1 }, { purchases: 4, avgSpend: 2, visits: 2 } ]
+      const ts = buildSeries(passengers, 'totalSpend')
+      expect(ts.values[0]).toBe(10)
+
+      const spv = buildSeries(passengers, 'spendPerVisit')
+      expect(spv.values[0]).toBe(10)
+
+      const mystery = buildSeries(passengers, 'nonexistentKey')
+      // value fallback should coerce missing property to 0 via safeNumber
+      expect(Array.isArray(mystery.values)).toBe(true)
+    } finally {
+      METRICS.splice(0, METRICS.length, ...original)
+    }
+  })
+
+  it('when METRICS entry exists but accessor is non-function for totalSpend/spendPerVisit, fallback executes', () => {
+    const mod = require('../ChartData.js')
+    const { METRICS, buildSeries } = mod
+    const original = METRICS.map(m => ({ ...m }))
+    try {
+      // make totalSpend accessor non-function
+      const ti = METRICS.findIndex(m => m.key === 'totalSpend')
+      if (ti >= 0) METRICS[ti] = { ...METRICS[ti], accessor: 'not-a-fn' }
+      const pi = METRICS.findIndex(m => m.key === 'spendPerVisit')
+      if (pi >= 0) METRICS[pi] = { ...METRICS[pi], accessor: null }
+
+      const passengers = [ { purchases: 2, avgSpend: 5, visits: 1 }, { purchases: 4, avgSpend: 2, visits: 2 } ]
+      const ts = buildSeries(passengers, 'totalSpend')
+      expect(ts.values[0]).toBe(10)
+
+      const spv = buildSeries(passengers, 'spendPerVisit')
+      expect(spv.values[0]).toBe(10)
+    } finally {
+      METRICS.splice(0, METRICS.length, ...original)
+    }
+  })
+
   it('buildSeries with no arguments uses defaults and returns empty arrays', () => {
     const out = buildSeries()
     expect(out.labels).toEqual([])
     expect(out.values).toEqual([])
+  })
+
+  it('explicit undefined metricKey and options use defaults (exercise default-assignment)', () => {
+    const out = buildSeries([{ purchases: 2 }], undefined, undefined)
+    // default metricKey is 'purchases' so value should reflect purchases
+    expect(out.values).toEqual([2])
   })
 
   it('buildSeries explicit undefined args exercises default-assignment branch', () => {
@@ -343,5 +404,21 @@ describe('ChartData utilities', () => {
     expect(result.labels).toEqual([])
     expect(result.values).toEqual([])
     expect(result.rows).toEqual([])
+  })
+
+  it('buildSeries rows mapping executes computeDerived for non-empty passengers', () => {
+    const passengers = [{ firstName: 'Z', purchases: 5, avgSpend: 2, visits: 1 }]
+    const out = buildSeries(passengers, 'purchases')
+    expect(Array.isArray(out.rows)).toBe(true)
+    expect(out.rows.length).toBe(1)
+    expect(out.labels[0]).toBeTruthy()
+  })
+
+  it('buildSeries handles property access with undefined values gracefully', () => {
+    const passengers = [{ firstName: 'Y', mystery: undefined }]
+    const out = buildSeries(passengers, 'mystery')
+    expect(out.values.length).toBe(1)
+    // undefined should be coerced to 0 via safeNumber
+    expect(out.values[0]).toBe(0)
   })
 })

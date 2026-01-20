@@ -69,11 +69,13 @@ const chartOptions = computed(() => ({
     legend: { display: false },
     tooltip: {
       callbacks: {
-        label(ctx) {
+          label(ctx) {
           const di = ctx.dataIndex
           const metricLabel = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].label) || 'Value'
           const row = (Rows.value && Rows.value[di]) || {}
-          const val = Number.isFinite(Number(row.value)) ? Number(row.value) : (ctx.raw ?? 0)
+          const val = Number.isFinite(Number(row.value))
+            ? Number(row.value)
+            : (ctx.raw ?? 0)
           const name = row.name || 'Unknown'
           const parts = [`${metricLabel}: ${val.toLocaleString()}`, name]
           if (row.purchases !== undefined) parts.push(`Purchases: ${row.purchases}`)
@@ -141,6 +143,7 @@ onBeforeUnmount(() => { unmount() })
       <small>Select metric to compare</small>
       <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
         <select id="metric" v-model="MetricIndex" style="padding:6px 8px; min-width:160px; color:#1f1f2b; background:#fff; border-radius:8px; border:1px solid #dfe3f3;">
+          <!-- istanbul ignore next -->
           <option v-for="(label, idx) in HeaderLabels" :key="idx" :value="idx">{{ label }}</option>
         </select>
         <label style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#444;">

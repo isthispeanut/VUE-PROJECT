@@ -141,4 +141,79 @@ describe('ChartUtils generic factory', () => {
     lifecycle.update({})
     expect(true).toBe(true)
   })
+
+  it('mount uses buildConfig when provided as static object and handles missing ctx gracefully', () => {
+    // static config and canvas with getContext returning falsy should early return
+    const canvasRef = { value: { getContext: () => null } }
+    const staticCfg = { type: 'bar', data: { labels: [], datasets: [] } }
+    const lifecycle = createChartLifecycle(canvasRef, staticCfg)
+    // should not throw and should not call Chart constructor
+    const before = Chart.mock.calls.length
+    lifecycle.mount()
+    // ensure no additional Chart constructor calls were made
+    expect(Chart.mock.calls.length).toBe(before)
+  })
+
+  it('update applies options-only payload and still calls instance.update', () => {
+    const canvasRef = { value: { getContext: () => ({}) } }
+    const cfg = { type: 'bar', data: { labels: [], datasets: [] }, options: {} }
+    const lifecycle = createChartLifecycle(canvasRef, () => cfg)
+    lifecycle.mount()
+    // created instance
+    const created = Chart.mock.results[Chart.mock.results.length - 1].value
+    // call update with only options
+    const newCfg = { options: { customFlag: true } }
+    lifecycle.update(newCfg)
+    expect(created.options.customFlag).toBe(true)
+    expect(created.update).toHaveBeenCalled()
+    lifecycle.unmount()
+  })
+
+  it('buildPieConfig default args and createChartConfig pie dispatch', () => {
+    const pie = buildPieConfig()
+    expect(pie.type).toBe('pie')
+    expect(pie.options).toBeDefined()
+
+    // createChartConfig should dispatch to pie when requested
+    const dispatched = createChartConfig({ type: 'pie', data: { labels: [], datasets: [] } })
+    expect(dispatched.type).toBe('pie')
+  })
+
+  it('buildBarConfig honors nested options override (legend display true)', () => {
+    const data = { labels: ['x'], datasets: [{ data: [1] }] }
+    const cfg = buildBarConfig({ data, options: { plugins: { legend: { display: true } } } })
+    expect(cfg.type).toBe('bar')
+    expect(cfg.options.plugins.legend.display).toBe(true)
+  })
+
+  it('buildBarConfig default call and createChartConfig default call exercise defaults', () => {
+    // call with no args to use default params
+    const b = buildBarConfig()
+    expect(b.type).toBe('bar')
+    expect(b.options).toBeDefined()
+
+    const def = createChartConfig()
+    expect(def.type).toBe('bar')
+  })
+
+  it('buildBarConfig merges missing nested options with defaults (scales present)', () => {
+    const data = { labels: ['x'], datasets: [{ data: [1] }] }
+    // pass options without scales to ensure default scales are applied
+    const cfg = buildBarConfig({ data, options: { plugins: { legend: { display: false } } } })
+    expect(cfg.options.scales).toBeDefined()
+    expect(cfg.options.scales.x.beginAtZero).toBe(true)
+  })
+
+  it('update applies data-only payload and calls instance.update', () => {
+    const canvasRef = { value: { getContext: () => ({}) } }
+    const cfg = { type: 'bar', data: { labels: [], datasets: [] }, options: {} }
+    const lifecycle = createChartLifecycle(canvasRef, () => cfg)
+    lifecycle.mount()
+    const created = Chart.mock.results[Chart.mock.results.length - 1].value
+    const newCfg = { data: { labels: ['a'], datasets: [{ data: [1] }] } }
+    lifecycle.update(newCfg)
+    expect(created.data.labels).toEqual(['a'])
+    expect(created.update).toHaveBeenCalled()
+    lifecycle.unmount()
+  })
 })
