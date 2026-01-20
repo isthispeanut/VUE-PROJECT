@@ -421,4 +421,11 @@ describe('ChartData utilities', () => {
     // undefined should be coerced to 0 via safeNumber
     expect(out.values[0]).toBe(0)
   })
+
+  it('buildSeries handles mixed undefined and numeric values to exercise mapping branch', () => {
+    const passengers = [ { firstName: 'A', purchases: undefined }, { firstName: 'B', purchases: 5 } ]
+    const out = buildSeries(passengers, 'purchases')
+    // first coerced to 0, second remains 5
+    expect(out.values).toEqual([0,5])
+  })
 })

@@ -266,6 +266,27 @@ describe('IndividualBarChart.vue', () => {
     wrapper.unmount()
   })
 
+  it('optionLabel and tooltip variations cover fallback branches', async () => {
+    const wrapper = mount(IndividualBarChart)
+    // direct call to optionLabel should return fallback text for falsy labels
+    expect(wrapper.vm.optionLabel('', 0)).toContain('Metric')
+
+    // exercise tooltip callback with a simple row and fallback cases
+    wrapper.vm.Rows = [{ name: 'Alpha', value: 123, purchases: 1 }]
+    wrapper.vm.MetricIndex = 0
+    const cb = wrapper.vm.chartOptions.plugins.tooltip.callbacks.label
+    const out = cb({ dataIndex: 0, raw: 123 })
+    expect(out).toContain('Alpha')
+    expect(out).toContain('Purchases')
+
+    // missing row fallback
+    wrapper.vm.Rows = []
+    const out2 = cb({ dataIndex: 0, raw: 9 })
+    expect(out2).toContain('Unknown')
+    expect(out2).toContain('9')
+    wrapper.unmount()
+  })
+
   it('does not mount chart when canvas context is missing', async () => {
     const original = HTMLCanvasElement.prototype.getContext
     HTMLCanvasElement.prototype.getContext = () => null
