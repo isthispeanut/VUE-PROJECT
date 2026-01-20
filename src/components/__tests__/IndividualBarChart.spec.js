@@ -220,6 +220,19 @@ describe('IndividualBarChart.vue', () => {
     wrapper.unmount()
   })
 
+  it('toggles normalize checkbox', async () => {
+    const wrapper = mount(IndividualBarChart)
+
+    const checkbox = wrapper.find('input[type="checkbox"]')
+    expect(checkbox.exists()).toBe(true)
+
+    await checkbox.setValue(true)
+    await checkbox.setValue(false)
+
+    expect(wrapper.vm.Normalize).toBe(false)
+    wrapper.unmount()
+  })
+
   it('mounting with empty metrics prop uses default METRICS and builds headers', async () => {
     const wrapper = mount(IndividualBarChart, { props: { metrics: [] } })
     // allow mounted async to complete

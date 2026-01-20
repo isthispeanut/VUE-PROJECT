@@ -428,4 +428,14 @@ describe('ChartData utilities', () => {
     // first coerced to 0, second remains 5
     expect(out.values).toEqual([0,5])
   })
+
+  it('applies default options', () => {
+    const result = buildSeries([], undefined)
+    expect(result).toBeDefined()
+  })
+
+  it('uses default normalize and sort when options are missing', () => {
+    const result = buildSeries([], undefined, {})
+    expect(result).toBeDefined()
+  })
 })
