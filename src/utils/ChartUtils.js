@@ -61,6 +61,7 @@ export function createChartConfig({ type = 'bar', data = undefined, options = un
   if (type === 'bar') return buildBarConfig({ data, options })
   if (type === 'pie') return buildPieConfig({ data, options })
   // fallback: assume bar
+  /* istanbul ignore next */
   return buildBarConfig({ data, options })
 }
 

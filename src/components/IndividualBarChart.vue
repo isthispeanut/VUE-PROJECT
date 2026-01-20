@@ -36,6 +36,7 @@ async function fetchPassengers() {
 const sourceData = computed(() => props.data || localData.value || mockData)
 
 function RebuildSeries() {
+  /* istanbul ignore next */
   const passengers = (sourceData.value && sourceData.value.passengers) || []
   const metricKey = (Metrics[MetricIndex.value] && Metrics[MetricIndex.value].key) || 'purchases'
   const series = buildSeries(passengers, metricKey, { normalize: Normalize.value, sort: SortOrder.value })

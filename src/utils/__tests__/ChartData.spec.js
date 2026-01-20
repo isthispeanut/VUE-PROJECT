@@ -438,4 +438,9 @@ describe('ChartData utilities', () => {
     const result = buildSeries([], undefined, {})
     expect(result).toBeDefined()
   })
+
+  it('minMaxNormalize maps values when min !== max', () => {
+    const out = minMaxNormalize([10, 20])
+    expect(out).toEqual([0, 100])
+  })
 })
