@@ -317,4 +317,31 @@ describe('ChartData utilities', () => {
       METRICS.splice(0, METRICS.length, ...original)
     }
   })
+
+  it('normalize handles null values through buildSeries', () => {
+    const out = buildSeries(
+      [{ purchases: null }],
+      'purchases',
+      { normalize: true }
+    )
+    expect(out.values.length).toBe(1)
+  })
+
+  it('returns early when data array is null', () => {
+    const result = buildSeries(null, 'value', { normalize: true })
+    // buildSeries returns an object with empty arrays for empty input
+    expect(result).toBeDefined()
+    expect(result.labels).toEqual([])
+    expect(result.values).toEqual([])
+    expect(result.rows).toEqual([])
+  })
+
+  it('returns early when data array is empty', () => {
+    const result = buildSeries([], 'value', { normalize: true })
+    // buildSeries returns an object with empty arrays for empty input
+    expect(result).toBeDefined()
+    expect(result.labels).toEqual([])
+    expect(result.values).toEqual([])
+    expect(result.rows).toEqual([])
+  })
 })

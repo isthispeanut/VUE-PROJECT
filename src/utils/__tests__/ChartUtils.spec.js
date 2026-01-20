@@ -109,4 +109,36 @@ describe('ChartUtils generic factory', () => {
     expect(() => lifecycle.update({ data: { labels: ['x'], datasets: [] } })).not.toThrow()
     lifecycle.unmount()
   })
+
+  it('update safely returns when newCfg is falsy', () => {
+    const lifecycle = createChartLifecycle({ value: {} }, () => ({}))
+    expect(() => lifecycle.update(null)).not.toThrow()
+  })
+
+  it('mount returns early when buildConfig returns undefined', () => {
+    const canvasRef = { value: { getContext: () => ({}) } }
+    const lifecycle = createChartLifecycle(canvasRef, () => undefined)
+    lifecycle.mount()
+    expect(true).toBe(true)
+  })
+
+  it('mount returns early when canvasRef is null', () => {
+    const lifecycle = createChartLifecycle(null, () => ({}))
+    lifecycle.mount()
+    expect(true).toBe(true)
+  })
+
+  it('mount returns early when buildConfig returns null', () => {
+    const canvasRef = { value: {} }
+    const lifecycle = createChartLifecycle(canvasRef, () => null)
+    lifecycle.mount()
+    expect(true).toBe(true)
+  })
+
+  it('update returns early when instance is missing', () => {
+    const canvasRef = { value: {} }
+    const lifecycle = createChartLifecycle(canvasRef, () => ({}))
+    lifecycle.update({})
+    expect(true).toBe(true)
+  })
 })

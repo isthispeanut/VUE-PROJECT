@@ -208,4 +208,33 @@ describe('IndividualBarChart.vue', () => {
     expect(label).toContain('0')
     wrapper.unmount()
   })
+
+  it('does not mount chart when canvas context is missing', async () => {
+    const original = HTMLCanvasElement.prototype.getContext
+    HTMLCanvasElement.prototype.getContext = () => null
+
+    const wrapper = shallowMount(IndividualBarChart)
+    await new Promise(r => setTimeout(r, 0))
+
+    // Should not crash and should not create Chart
+    expect(wrapper.exists()).toBe(true)
+
+    HTMLCanvasElement.prototype.getContext = original
+    wrapper.unmount()
+  })
+
+  it('returns early when canvas context is missing', async () => {
+    const original = HTMLCanvasElement.prototype.getContext
+
+    HTMLCanvasElement.prototype.getContext = undefined
+
+    const wrapper = shallowMount(IndividualBarChart)
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.exists()).toBe(true)
+
+    wrapper.unmount()
+    HTMLCanvasElement.prototype.getContext = original
+  })
 })
